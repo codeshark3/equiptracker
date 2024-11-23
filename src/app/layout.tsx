@@ -1,6 +1,6 @@
 import "~/styles/globals.css";
+import Header from "~/components/Header";
 
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,8 +13,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={``}>
+      <body><Header/>{children}</body>
     </html>
   );
 }
