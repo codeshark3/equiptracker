@@ -8,13 +8,18 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Select, SelectTrigger, SelectValue, SelectContent } from "~/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 import { Input } from "~/components/ui/input";
 import { Control } from "react-hook-form";
 import { Checkbox } from "~/components/ui/checkbox";
 
-import "react-phone-number-input/style.css";
+// import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 // import { E164Number } from "libphonenumber-js/core";
 // import ReactDatePicker from "react-datepicker";
@@ -22,15 +27,16 @@ import "react-phone-number-input/style.css";
 
 import Image from "next/image";
 export enum FormFieldType {
-    INPUT = "input",
-    TEXTAREA = "textarea",
-    PHONE_INPUT = "phoneInput",
-    CHECKBOX = "checkbox",
-    DATE_PICKER = "datepicker",
-    SELECT = "select",
-    SKELETON = "skeleton",
-  }
-  
+  INPUT = "input",
+  PASSWORD = "password",
+  TEXTAREA = "textarea",
+  PHONE_INPUT = "phoneInput",
+  CHECKBOX = "checkbox",
+  DATE_PICKER = "datepicker",
+  SELECT = "select",
+  SKELETON = "skeleton",
+}
+
 interface CustomProps {
   control: Control<any>;
   fieldType: FormFieldType;
@@ -59,7 +65,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
   switch (props.fieldType) {
     case FormFieldType.INPUT:
       return (
-        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+        <div className="border-dark-500 bg-dark-400 flex rounded-md border">
           {iconSrc && (
             <Image
               src={iconSrc}
@@ -78,6 +84,28 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           </FormControl>
         </div>
       );
+    case FormFieldType.PASSWORD:
+      return (
+        <div className="border-dark-500 bg-dark-400 flex rounded-md border">
+          {iconSrc && (
+            <Image
+              src={iconSrc}
+              width={24}
+              height={24}
+              alt={iconAlt || "icon"}
+              className="ml-2"
+            />
+          )}
+          <FormControl className="">
+            <Input
+              placeholder={placeholder}
+              {...field}
+              type="password"
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
       break;
     case FormFieldType.TEXTAREA:
       return (
@@ -91,21 +119,21 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
         </FormControl>
       );
       break;
-    // case FormFieldType.PHONE_INPUT:
-    //   return (
-    //     <FormControl>
-    //       <PhoneInput
-    //         defaultCountry="GH"
-    //         placeholder={placeholder}
-    //         {...field}
-    //         international
-    //         withCountryCallingCode
-    //         values={field.value as E164Number | undefined}
-    //         onChange={field.onChange}
-    //         className="input-phone"
-    //       />
-    //     </FormControl>
-    //   );
+      // case FormFieldType.PHONE_INPUT:
+      //   return (
+      //     <FormControl>
+      //       <PhoneInput
+      //         defaultCountry="GH"
+      //         placeholder={placeholder}
+      //         {...field}
+      //         international
+      //         withCountryCallingCode
+      //         values={field.value as E164Number | undefined}
+      //         onChange={field.onChange}
+      //         className="input-phone"
+      //       />
+      //     </FormControl>
+      //   );
       break;
     // case FormFieldType.DATE_PICKER:
     //   return (
