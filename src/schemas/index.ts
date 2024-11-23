@@ -2,12 +2,19 @@ import { number, z } from "zod";
 
 export const SignInSchema = z.object({
   //   name: z.string().min(1),
-  email: z.string().email({
-    message: "Email is required ",
-  }),
-  password: z.string().min(1, {
-    message: "Password is required",
-  }),
+  email: z
+    .string()
+    .email({
+      message: "Please enter a valid email address ",
+    })
+    .min(2)
+    .max(50),
+  password: z
+    .string()
+    .min(8, {
+      message: "Minimum password length is 8 characters",
+    })
+    .max(50, "Password should not exceed 50 characters"),
   // password: z.string().min(6),
 });
 
@@ -17,16 +24,29 @@ export const SignInSchema = z.object({
 // }
 export const SignUpSchema = z
   .object({
-    name: z.string().min(1, { message: "Name is required" }),
-    email: z.string().email({
-      message: "Email is required ",
-    }),
-    password: z.string().min(6, {
-      message: "Minimum password length is 6",
-    }),
-    confirm_password: z.string().min(6, {
-      message: "Minimum password length is 6",
-    }),
+    name: z
+      .string()
+      .min(2, { message: "Name should be at least 2 characters  " })
+      .max(50, { message: "Name should not exceed 50 characters" }),
+    email: z
+      .string()
+      .email({
+        message: "Please enter a valid email address ",
+      })
+      .min(2)
+      .max(50),
+    password: z
+      .string()
+      .min(8, {
+        message: "Minimum password length is 8 characters",
+      })
+      .max(50, "Password should not exceed 50 characters"),
+    confirm_password: z
+      .string()
+      .min(8, {
+        message: "Minimum password length is 8 characters",
+      })
+      .max(50, "Password should not exceed 50 characters"),
   })
   .refine((val) => val.password === val.confirm_password, {
     message: "Passwords do not match",
