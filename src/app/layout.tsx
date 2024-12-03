@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 import Header from "~/components/Header";
+import { Toaster } from "~/components/ui/toaster";
 
 import { type Metadata } from "next";
 
@@ -14,7 +15,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={``}>
-      <body><Header/>{children}</body>
+      <body>
+        <Header />
+        {children} <Toaster />
+      </body>
     </html>
   );
 }

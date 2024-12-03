@@ -9,6 +9,9 @@ export default {
     url: env.POSTGRES_URL,
   },
   tablesFilter: ["csir_dbms_*"],
-  verbose:true,
+  verbose: true,
+  // introspect: {
+  //   casing: "camel", // or "preserve"
+  // },
   strict: true,
 } satisfies Config;

@@ -16,8 +16,12 @@ import { Form } from "~/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import { FormFieldType } from "../CustomFormField";
 import { Button } from "../ui/button";
+import { authClient } from "~/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "~/hooks/use-toast";
 
 const SignInForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -26,7 +30,43 @@ const SignInForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof SignInSchema>) {
+  async function onSubmit(values: z.infer<typeof SignInSchema>) {
+    const { email, password } = values;
+    const { data, error } = await authClient.signIn.email({
+      email,
+
+      password,
+      callbackURL: "/ ",
+      fetchOptions: {
+        onRequest: () => {
+          toast({
+            // title: { success },
+            description: " requesting",
+            variant: "default",
+            className: "bg-blue-500 text-white font-bold ",
+          });
+        },
+        onSuccess: () => {
+          toast({
+            // title: { success },
+            description: " successfully",
+            variant: "default",
+            className: "bg-emerald-500 text-white font-bold ",
+          });
+          form.reset();
+          router.push("/sign-in"); // redirect to login page
+        },
+
+        onError: () => {
+          toast({
+            // title: { error },
+            description: " failed",
+            variant: "default",
+            className: "bg-red-500 text-white font-bold ",
+          });
+        },
+      },
+    });
     console.log(values);
   }
 
