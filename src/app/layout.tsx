@@ -1,6 +1,8 @@
 import "~/styles/globals.css";
 import Header from "~/components/Header";
 import { Toaster } from "~/components/ui/toaster";
+import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
+import { AppSidebar } from "~/components/AppSidebar";
 
 import { type Metadata } from "next";
 
@@ -15,8 +17,8 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={``}>
-      <body>
-        <Header />
+      <body className="dark">
+        {/* <Header /> */}
         {children} <Toaster />
       </body>
     </html>

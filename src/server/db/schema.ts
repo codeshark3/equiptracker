@@ -3,6 +3,7 @@
 
 import { time } from "console";
 import { sql } from "drizzle-orm";
+import { int } from "drizzle-orm/mysql-core";
 import {
   index,
   text,
@@ -39,6 +40,10 @@ export const user = createTable("user", {
   image: text("image"),
   createdAt: timestamp("createdAt").notNull(),
   updatedAt: timestamp("updatedAt").notNull(),
+  role: text("role"),
+  banned: boolean("banned"),
+  banReason: text("banReason"),
+  banExpires: integer("banExpires"),
 });
 
 export const session = createTable("session", {
@@ -52,6 +57,7 @@ export const session = createTable("session", {
     .references(() => user.id),
   createdAt: timestamp("createdAt").notNull(),
   updatedAt: timestamp("updatedAt").notNull(),
+  impersonatedBy: text("impersonatedBy"),
 });
 
 export const account = createTable("account", {
