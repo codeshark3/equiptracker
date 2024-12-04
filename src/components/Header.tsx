@@ -23,6 +23,7 @@ const Header = async () => {
                 await auth.api.signOut({
                   headers: await headers(),
                 });
+                console.log("signed out");
                 redirect("/");
               }}
             >

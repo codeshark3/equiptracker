@@ -36,7 +36,7 @@ const SignInForm = () => {
       email,
 
       password,
-      callbackURL: "/ ",
+      // callbackURL: "/",
       fetchOptions: {
         onRequest: () => {
           toast({
@@ -46,7 +46,7 @@ const SignInForm = () => {
             className: "bg-blue-500 text-white font-bold ",
           });
         },
-        onSuccess: () => {
+        onSuccess: (val) => {
           toast({
             // title: { success },
             description: " successfully",
@@ -54,7 +54,19 @@ const SignInForm = () => {
             className: "bg-emerald-500 text-white font-bold ",
           });
           form.reset();
-          router.push("/sign-in"); // redirect to login page
+
+          if (val.data?.user?.role === "admin") {
+            router.push("/admin");
+          }
+
+          if (val.data?.user?.role === "staff") {
+            router.push("/staff");
+          }
+
+          if (val.data?.user?.role === "user") {
+            router.push("/user");
+          }
+          // router.push("/sign-in"); // redirect to login page
         },
 
         onError: () => {

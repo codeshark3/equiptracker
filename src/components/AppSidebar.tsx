@@ -1,5 +1,9 @@
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
-
+import { auth } from "~/lib/auth";
+import { headers } from "next/headers";
+import { Button, buttonVariants } from "./ui/button";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -48,7 +52,11 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export async function AppSidebar() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarContent>
@@ -76,7 +84,9 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Username
+                  <User2 />
+                  {user ? user.name : ""}
+
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -91,7 +101,24 @@ export function AppSidebar() {
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <span>Sign out</span>
+                  {session ? (
+                    <form
+                      action={async () => {
+                        "use server";
+                        await auth.api.signOut({
+                          headers: await headers(),
+                        });
+                        redirect("/");
+                      }}
+                    >
+                      <Button type="submit">Sign Out</Button>
+                    </form>
+                  ) : (
+                    <></>
+                    // <Link href="/sign-in" className={buttonVariants()}>
+                    //   <h1>Login</h1>
+                    // </Link>
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
