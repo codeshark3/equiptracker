@@ -23,6 +23,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { User2 } from "lucide-react";
 import { ChevronUp } from "lucide-react";
+import SignOutButton from "./SignOutButton";
 // Menu items.
 const items = [
   {
@@ -101,7 +102,8 @@ export async function AppSidebar() {
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  {session ? (
+                  <SignOutButton />
+                  {/* {session ? (
                     <form
                       action={async () => {
                         "use server";
@@ -118,7 +120,7 @@ export async function AppSidebar() {
                     // <Link href="/sign-in" className={buttonVariants()}>
                     //   <h1>Login</h1>
                     // </Link>
-                  )}
+                  )} */}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

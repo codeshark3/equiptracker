@@ -3,12 +3,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Session } from "~/lib/auth";
 
 // Define route categories
-const publicRoutes = ["/"];
+const publicRoutes = ["/", "/search"];
 const authRoutes = ["/sign-in", "/sign-up"];
 const passwordRoutes = ["/reset-password", "/forgot-password"];
 const staffRoutes = ["/staff"];
 const adminRoutes = ["/admin"];
-const userRoutes = ["/user"];
+const customerRoutes = ["/customer"];
 
 export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
@@ -18,7 +18,7 @@ export default async function authMiddleware(request: NextRequest) {
   const isPasswordRoute = passwordRoutes.includes(pathName);
   const isStaffRoute = staffRoutes.includes(pathName);
   const isAdminRoute = adminRoutes.includes(pathName);
-  const isUserRoute = userRoutes.includes(pathName);
+  const iscustomerRoute = customerRoutes.includes(pathName);
 
   // Fetch session from API
   const { data: session } = await betterFetch<Session>(
@@ -42,10 +42,10 @@ export default async function authMiddleware(request: NextRequest) {
   }
 
   // If authenticated, restrict access based on role
-  const userRole = session.user.role;
+  const customerRole = session.user.role;
 
   // Staff can access public and staff routes only
-  if (userRole === "staff") {
+  if (customerRole === "staff") {
     if (isPublicRoute || isStaffRoute) {
       return NextResponse.next();
     }
@@ -53,19 +53,19 @@ export default async function authMiddleware(request: NextRequest) {
   }
 
   // Admin can access public and admin routes only
-  if (userRole === "admin") {
+  if (customerRole === "admin") {
     if (isPublicRoute || isAdminRoute) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/admin", request.url));
   }
 
-  // Users can access public and user routes only
-  if (userRole === "user") {
-    if (isPublicRoute || isUserRoute) {
+  // customers can access public and customer routes only
+  if (customerRole === "user") {
+    if (isPublicRoute || iscustomerRoute) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL("/user", request.url));
+    return NextResponse.redirect(new URL("/customer", request.url));
   }
 
   // Default: Redirect unauthorized access to home
@@ -84,7 +84,7 @@ export const config = {
 // const passwordRoutes = ["/reset-password", "/forgot-password"];
 // const adminRoutes = ["/admin"];
 // const staffRoutes = ["/staff"];
-// const userRoutes = ["/user"];
+// const customerRoutes = ["/customer"];
 
 // export default async function authMiddleware(request: NextRequest) {
 //   const pathName = request.nextUrl.pathname;
@@ -92,7 +92,7 @@ export const config = {
 //   const isPasswordRoute = passwordRoutes.includes(pathName);
 //   const isAdminRoute = adminRoutes.includes(pathName);
 //   const isStaffRoute = staffRoutes.includes(pathName);
-//   const isUserRoute = userRoutes.includes(pathName);
+//   const iscustomerRoute = customerRoutes.includes(pathName);
 
 //   const { data: session } = await betterFetch<Session>(
 //     "/api/auth/get-session",
@@ -116,15 +116,15 @@ export const config = {
 //     return NextResponse.redirect(new URL("/", request.url));
 //   }
 
-//   if (isAdminRoute && session.user.role !== "admin") {
+//   if (isAdminRoute && session.customer.role !== "admin") {
 //     return NextResponse.redirect(new URL("/sign-in", request.url));
 //   }
 
-//   if (isStaffRoute && session.user.role !== "staff") {
+//   if (isStaffRoute && session.customer.role !== "staff") {
 //     return NextResponse.redirect(new URL("/sign-in", request.url));
 //   }
 
-//   if (isUserRoute && session.user.role !== "user") {
+//   if (iscustomerRoute && session.customer.role !== "customer") {
 //     return NextResponse.redirect(new URL("/sign-in", request.url));
 //   }
 //   return NextResponse.next();

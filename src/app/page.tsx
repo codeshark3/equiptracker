@@ -2,16 +2,19 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "~/lib/auth";
+import Form from "next/form";
 import Header from "~/components/Header";
-import { H } from "node_modules/better-auth/dist/index-CS8-YiCU";
+// import { H } from "node_modules/better-auth/dist/index-CS8-YiCU";
 
 export default async function HomePage() {
   return (
     <div>
       <Header />
-      <div>
-        <h1>Hello main page</h1>
-        <h1>Hello World</h1>
+      <div className="flex items-center justify-center">
+        <Form action="/search">
+          <input type="text" name="query" />
+          <button type="submit">Submit</button>
+        </Form>
       </div>
     </div>
   );

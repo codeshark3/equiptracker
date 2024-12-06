@@ -54,18 +54,18 @@ const SignInForm = () => {
             className: "bg-emerald-500 text-white font-bold ",
           });
           form.reset();
+          router.push("/user");
+          // if (val.data?.user?.role === "admin") {
+          //   router.push("/admin");
+          // }
 
-          if (val.data?.user?.role === "admin") {
-            router.push("/admin");
-          }
+          // if (val.data?.user?.role === "staff") {
+          //   router.push("/staff");
+          // }
 
-          if (val.data?.user?.role === "staff") {
-            router.push("/staff");
-          }
-
-          if (val.data?.user?.role === "user") {
-            router.push("/user");
-          }
+          // if (val.data?.user?.role === "user") {
+          //   router.push("/user");
+          // }
           // router.push("/sign-in"); // redirect to login page
         },
 

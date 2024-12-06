@@ -9,7 +9,7 @@ const Header = async () => {
     headers: await headers(),
   });
   return (
-    <div className="ml-[300px] border-b px-4">
+    <div className="border-b px-4">
       <div className="mx-auto flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <h1>CSIR Database Management System</h1>
