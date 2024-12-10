@@ -7,7 +7,7 @@ import { AppSidebar } from "~/components/AppSidebar";
 
 import { Separator } from "~/components/ui/separator";
 
-export default function CustomerLayout({
+export default function DataLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -23,4 +23,16 @@ export default function CustomerLayout({
       </SidebarInset>
     </SidebarProvider>
   );
+}
+
+{
+  /* <SidebarProvider>
+        {" "}
+        <AppSidebar />
+        <main>
+          <div className="flex h-screen flex-col">
+            <SidebarTrigger /> {children}
+          </div>
+        </main>
+      </SidebarProvider> */
 }

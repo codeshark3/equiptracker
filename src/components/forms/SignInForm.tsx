@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import { authClient } from "~/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "~/hooks/use-toast";
+import Image from "next/image";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -85,6 +86,17 @@ const SignInForm = () => {
   return (
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
+        <div className="flex flex-col items-center justify-center pb-4">
+          <Image
+            src="/assets/images/logo.png"
+            alt="Logo"
+            width={100}
+            height={100}
+            className="pb-4"
+          />
+          <h1 className="text-bold text-xl">CSIR Database Management System</h1>
+        </div>
+
         <CardTitle>Sign In</CardTitle>
         <CardDescription>
           Welcome back! Please sign in to continue
