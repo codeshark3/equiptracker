@@ -27,10 +27,24 @@ export async function getUsers() {
 
   // if (!user.userId) throw new Error("Unauthorized");
 
-  const projects = await db.query.projects.findMany({
+  const projects = await db.query.user.findMany({
     // where: (model, { eq }) => eq(model.userId, user.userId),
     orderBy: (model, { desc }) => desc(model.id),
   });
 
   return projects;
+}
+
+export async function getUser(id: string) {
+  // const user = auth();
+  // if (!user.userId) throw new Error("Unauthorized");
+
+  const user = await db.query.user.findFirst({
+    where: (model, { eq }) => eq(model.id, id),
+  });
+  if (!user) throw new Error("User not found!");
+
+  // if (project.userId !== user.userId) throw new Error("Unauthorized");
+
+  return user;
 }
