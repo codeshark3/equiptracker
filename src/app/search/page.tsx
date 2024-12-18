@@ -76,7 +76,7 @@ export default function SearchPage() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-bold">Search Users</h1>
+      <h1 className="text-2xl font-bold">Search Datasets</h1>
 
       {/* Search Form */}
       <form action={handleSearch} className="mt-4 space-y-4">
