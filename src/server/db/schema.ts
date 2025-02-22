@@ -97,6 +97,7 @@ export const dataset = createTable("dataset", {
   updatedAt: timestamp("updated_at")
     .notNull()
     .$onUpdate(() => new Date()),
+  user_id: text("user_id").references(() => user.id),
 });
 
 // Tags Table (Stores unique tag names)

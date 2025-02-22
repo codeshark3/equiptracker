@@ -85,19 +85,37 @@ const CreateDatasetForm = () => {
           placeholder="Title"
         />
 
-        <CustomFormField
-          control={form.control}
-          fieldType={FormFieldType.SELECT}
-          name="year"
-          label="Year"
-          placeholder="Year"
-        >
-          {years.map((type) => (
-            <SelectItem key={type} value={type}>
-              {type}
-            </SelectItem>
-          ))}
-        </CustomFormField>
+        <div className="flex gap-2 ">
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.SELECT}
+            name="year"
+            label="Year"
+            placeholder="Year"
+
+          >
+            {years.map((type) => (
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
+            ))}
+          </CustomFormField>
+
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.SELECT}
+            name="division"
+            label="Division"
+            placeholder="Select Division"
+          >
+            {divisions.map((division) => (
+              <SelectItem key={division} value={division}>
+                {division}
+              </SelectItem>
+            ))}
+          </CustomFormField>
+        </div>
+
 
         <CustomFormField
           control={form.control}
@@ -106,20 +124,6 @@ const CreateDatasetForm = () => {
           label="Principal Investigator"
           placeholder="Name of Principal Investigator"
         />
-
-        <CustomFormField
-          control={form.control}
-          fieldType={FormFieldType.SELECT}
-          name="division"
-          label="Division"
-          placeholder="Select Division"
-        >
-          {divisions.map((division) => (
-            <SelectItem key={division} value={division}>
-              {division}
-            </SelectItem>
-          ))}
-        </CustomFormField>
 
         <CustomFormField
           control={form.control}
@@ -147,7 +151,7 @@ const CreateDatasetForm = () => {
 
         <Button
           type="submit"
-          className="w-full bg-primary hover:bg-red-500"
+          className="w-full bg-primary text-white text-bold hover:bg-primary/80"
           disabled={isPending}
         >
           Submit

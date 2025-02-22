@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import UpdateDataset from "~/components/forms/UpdateDataset";
+
 import { getDatasetById } from "~/server/dataset_queries";
 
 interface Props {
@@ -9,17 +9,7 @@ interface Props {
   };
 }
 
-interface DatasetInterface {
-  id: number;
-  title: string;
-  year: string;
-  pi_name: string;
-  description: string;
-  division: string;
-  papers: string;
-  tags: string;
-  user_id: string;
-}
+
 
 const DatasetDetailsPage = async ({ params }: Props) => {
   const { id } = await params;
@@ -27,7 +17,7 @@ const DatasetDetailsPage = async ({ params }: Props) => {
 
   return (
     <div>
-      {/* {dataset.map((dataset) => (
+      {dataset.map((dataset) => (
         <div key={dataset.id}>
           <span>{dataset.title}</span>
           <span>{dataset.year}</span>
@@ -37,11 +27,11 @@ const DatasetDetailsPage = async ({ params }: Props) => {
           <span>{dataset.papers}</span>
           <span>{dataset.tags}</span>
         </div>
-      ))} */}
+      ))}
 
       <Link href="/datasets">Go Back</Link>
       <Link href={`/datasets/${id}/update/`}>Update</Link>
-      <UpdateDataset datasetId={id} data={dataset} />
+
     </div>
   );
 };

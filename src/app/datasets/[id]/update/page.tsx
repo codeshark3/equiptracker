@@ -23,49 +23,34 @@ import {
   FormControl,
 } from "~/components/ui/form";
 
-interface UpdateDatasetFormProps {
-  title: string;
-  year: string;
-  pi_name: string;
-  description: string;
-  division: string;
-  papers: string;
-  tags: string;
-}
+
 const UpdateDatasetForm = () => {
   const { id } = useParams() as { id: string };
-  const [dataset, setDataset] = useState<z.infer<typeof datasetSchema> | null>(
-    null,
-  );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  //  Initialize form with empty default values
+  // Remove the dataset state since we don't need it
   const form = useForm<z.infer<typeof datasetSchema>>({
     resolver: zodResolver(datasetSchema),
     defaultValues: async () => {
-      const { data } = await getDatasetById(Number(id));
-      return data;
+      const data = await getDatasetById(Number(id));
+      if (!data?.[0]) {
+        throw new Error("Dataset not found");
+      }
+      const dataset = data[0];
+      return {
+        title: dataset.title,
+        year: dataset.year,
+        pi_name: dataset.pi_name,
+        description: dataset.description,
+        division: dataset.division,
+        papers: dataset.papers ?? "",
+        tags: dataset.tags ?? "",
+      };
     },
   });
 
-  // useEffect(() => {
-  //   async function fetchDataset() {
-  //     try {
-  //       const data = await getDatasetById(Number(id));
-  //       setDataset(data);
-
-  //       form.reset(data);
-  //     } catch (error) {
-  //       console.error("Error fetching dataset:", error);
-  //     }
-  //   }
-  //   fetchDataset();
-  // }, [id, form]);
-
   const onSubmit = (values: z.infer<typeof datasetSchema>) => {
-    if (!dataset) return;
-    console.log("sub", values);
     startTransition(() => {
       updateDataset(Number(id), values)
         .then((data) => {
@@ -92,9 +77,6 @@ const UpdateDatasetForm = () => {
         });
     });
   };
-
-  // ✅ Show loading until dataset is fetched
-  if (!dataset) return <p>Loading...</p>;
 
   return (
     <Form {...form}>
