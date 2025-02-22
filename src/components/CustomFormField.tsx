@@ -35,6 +35,7 @@ export enum FormFieldType {
   DATE_PICKER = "datepicker",
   SELECT = "select",
   SKELETON = "skeleton",
+  ARRAY = "input",
 }
 
 interface CustomProps {
@@ -106,7 +107,27 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           </FormControl>
         </div>
       );
-      break;
+    case FormFieldType.ARRAY:
+      return (
+        <div className="border-dark-500 bg-dark-400 flex rounded-md border">
+          {iconSrc && (
+            <Image
+              src={iconSrc}
+              width={24}
+              height={24}
+              alt={iconAlt || "icon"}
+              className="ml-2"
+            />
+          )}
+          <FormControl className="">
+            <Input
+              placeholder={placeholder}
+              {...field}
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
     case FormFieldType.TEXTAREA:
       return (
         <FormControl>

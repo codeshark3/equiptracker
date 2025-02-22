@@ -4,6 +4,7 @@ import { Toaster } from "~/components/ui/toaster";
 import { ThemeProvider } from "~/components/theme-provider";
 import { cn } from "~/lib/utils";
 import { type Metadata } from "next";
+import { ModeToggle } from "~/components/Toggle";
 import { Inter as FontSans } from "next/font/google";
 export const metadata: Metadata = {
   title: "CSIR WRI Database Management System",
@@ -32,7 +33,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {/* <Header /> */}
-          {children} <Toaster />
+          {children}{" "}
+          <div className="fixed bottom-4 right-4 z-50">
+            <ModeToggle />
+          </div>{" "}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

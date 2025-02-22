@@ -12,6 +12,7 @@ import {
   pgTableCreator,
   timestamp,
   varchar,
+  serial,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -81,6 +82,37 @@ export const verification = createTable("verification", {
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expiresAt").notNull(),
+});
+
+export const dataset = createTable("dataset", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  year: text("year").notNull(),
+  pi_name: text("pi_name").notNull(),
+  tags: text("tags"),
+  papers: text("papers"),
+  division: text("division").notNull(),
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+// Tags Table (Stores unique tag names)
+export const tags = createTable("tags", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+});
+
+// Junction Table (Many-to-Many Relationship)
+export const datasetTags = createTable("dataset_tags", {
+  datasetId: integer("dataset_id")
+    .notNull()
+    .references(() => dataset.id),
+  tagId: integer("tag_id")
+    .notNull()
+    .references(() => tags.id),
 });
 
 // export const user = createTable("user", {

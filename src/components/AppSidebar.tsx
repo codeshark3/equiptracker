@@ -242,13 +242,14 @@ export async function AppSidebar() {
   });
 
   const user = session?.user;
-  const role = user.role;
-
-  // Redirect if user is not authenticated
   if (!user) {
     redirect("/sign-in");
     return null;
   }
+
+  const role = user.role || "customer";
+
+  // Redirect if user is not authenticated
 
   // Type-safe role-based menu items
   const menuItems: MenuItem[] = MENU_ITEMS[role] || [];

@@ -4,7 +4,7 @@ import { Button, buttonVariants } from "./ui/button";
 import { auth } from "~/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { ModeToggle } from "./Toggle";
+
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Search } from "lucide-react";

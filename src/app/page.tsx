@@ -9,7 +9,7 @@ import { Hero } from "~/components/landing/Hero";
 import { Case } from "~/components/landing/Case";
 import { Features } from "~/components/landing/Features";
 import { Stats } from "~/components/landing/Stats";
-import { ModeToggle } from "~/components/Toggle";
+
 export default async function HomePage() {
   return (
     <div>
@@ -20,10 +20,6 @@ export default async function HomePage() {
       <Features />
 
       <Footer />
-
-      <div className="fixed bottom-4 right-4 z-50">
-        <ModeToggle />
-      </div>
     </div>
 
     // <div>

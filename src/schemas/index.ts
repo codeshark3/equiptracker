@@ -52,3 +52,42 @@ export const SignUpSchema = z
     message: "Passwords do not match",
     path: ["confirm_password"],
   });
+
+// export const datasetSchema = z.object({
+//   title: z.string(),
+//   year: z.string(),
+//   pi_name: z.string(),
+//   description: z.string().optional(),
+//   division: z.string(),
+//   userId: z.string(),
+//   papers: z.string().optional(),
+//   tagIds: z.array(z.number()).optional(),
+// });
+
+export const datasetSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  year: z
+    .string()
+    .length(4)
+    .regex(/^\d{4}$/, "Year must be in YYYY format"),
+  pi_name: z.string().min(1, "PI name is required"),
+  description: z.string(),
+  division: z.string().min(1, "Division is required"),
+
+  papers: z.string(),
+  tags: z.string(), // Ensure IDs match DB type
+});
+
+// TypeScript type inference
+export type DatasetInput = z.infer<typeof datasetSchema>;
+
+export const datasetInsertSchema = datasetSchema.pick({
+  title: true,
+  year: true,
+  pi_name: true,
+  division: true,
+  description: true,
+  papers: true,
+
+  tags: true, // Optional but needed for insert
+});
