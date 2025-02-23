@@ -2,7 +2,9 @@ import Link from "next/link";
 import React from "react";
 import { getDatasetById } from "~/server/dataset_queries";
 import { Button } from "~/components/ui/button";
-import { Calendar, User, Tag, FileText, Building2 } from "lucide-react";
+import { Calendar, User, Tag, FileText, Building2, Download } from "lucide-react";
+import { getUploadthingUrl } from "~/server/uploadthing";
+import DownloadButton from "./DownloadButton";
 
 interface Props {
   params: {
@@ -29,15 +31,21 @@ const DatasetDetailsPage = async ({ params }: Props) => {
   }
 
   const data = dataset[0] as NonNullable<typeof dataset[0]>;
+  const fileUrl = data.fileUrl ? await getUploadthingUrl(data.fileUrl) : null;
+
+  console.log('fileUrl:', fileUrl);
+  console.log('data.fileUrl:', data.fileUrl);
 
   return (
     <div className="mx-auto  px-4 py-8">
+      <div className="text-sm text-gray-500">Debug URL: {fileUrl}</div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-primary">{data.title}</h1>
         <div className="space-x-3">
           <Link href="/datasets">
             <Button variant="outline">Back to Datasets</Button>
           </Link>
+          {data.fileUrl && <DownloadButton fileUrl={data.fileUrl} />}
           <Link href={`/datasets/${id}/update`}>
             <Button>Edit Dataset</Button>
           </Link>
@@ -52,7 +60,6 @@ const DatasetDetailsPage = async ({ params }: Props) => {
             <span className="text-sm font-medium text-gray-500">Year:</span>
             <span className="text-sm text-primary">{data.year}</span>
           </div>
-
           <div className="flex items-center space-x-2">
             <User className="h-5 w-5 text-gray-500" />
             <span className="text-sm font-medium text-gray-500">Principal Investigator:</span>
