@@ -9,7 +9,7 @@ import { auth } from "~/lib/auth";
 import { headers } from "next/headers";
 import { title } from "process";
 import { revalidatePath } from "next/cache";
-export async function insertDataset(values: z.infer<typeof datasetSchema>) {
+export async function insertDataset({ values, fileUrl }: { values: z.infer<typeof datasetSchema>, fileUrl: string }) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -34,6 +34,7 @@ export async function insertDataset(values: z.infer<typeof datasetSchema>) {
       papers,
       tags,
       user_id: user_id,
+      fileUrl: fileUrl,
     });
     revalidatePath("/datasets");
     return { success: true, message: "Dataset added successfully!" };
@@ -43,10 +44,7 @@ export async function insertDataset(values: z.infer<typeof datasetSchema>) {
 }
 
 export async function getDatasets() {
-  // const datasets = await db.query.datasets.findMany({
-  //   orderBy: (model, { desc }) => desc(model.id),
-  // });
-  // return datasets;
+
 
   const datasets = await db.select().from(dataset);
   return datasets;

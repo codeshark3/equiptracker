@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,15 +14,6 @@ import { Button } from "~/components/ui/button";
 import * as z from "zod";
 import { SelectItem } from "~/components/ui/select";
 import { years, divisions } from "~/constants";
-import { Input } from "~/components/ui/input";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from "~/components/ui/form";
-
 
 const UpdateDatasetForm = () => {
   const { id } = useParams() as { id: string };
@@ -81,23 +72,12 @@ const UpdateDatasetForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
+        <CustomFormField
           control={form.control}
+          fieldType={FormFieldType.INPUT}
           name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Project Title"
-                  type="text"
-                  disabled={isPending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Title"
+          placeholder="Project Title"
         />
         <CustomFormField
           control={form.control}

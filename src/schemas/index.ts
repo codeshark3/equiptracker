@@ -76,6 +76,7 @@ export const datasetSchema = z.object({
 
   papers: z.string(),
   tags: z.string(), // Ensure IDs match DB type
+  fileUrl: z.string().optional(),
 });
 
 // TypeScript type inference

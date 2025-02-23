@@ -5,29 +5,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SelectItem } from "../ui/select";
 import CustomFormField from "~/components/CustomFormField";
-
+import { Form } from "~/components/ui/form";
 import { FormFieldType } from "~/components/CustomFormField";
 import { toast } from "~/hooks/use-toast";
 import { Button } from "~/components/ui/button";
-import { DatasetInput } from "~/schemas";
+
 import { datasetSchema } from "~/schemas";
 import { years, divisions } from "~/constants";
 import { authClient } from "~/lib/auth-client";
 import { insertDataset } from "~/server/dataset_queries";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+import { useRouter } from "next/navigation";
+import { UploadDropzone } from "@uploadthing/react";
+import { useState } from "react";
+import { useUploadThing } from "~/utils/uploadthing";
+
+
 
 const CreateDatasetForm = () => {
-  //const { data: session } = authClient.useSession();
-
+  const [file, setFile] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const { startUpload } = useUploadThing("datasetUploader");
   const form = useForm<z.infer<typeof datasetSchema>>({
     resolver: zodResolver(datasetSchema),
     defaultValues: {
@@ -36,41 +34,50 @@ const CreateDatasetForm = () => {
       pi_name: "",
       description: "",
       division: "", // Default to some valid division ID
-
+      fileUrl: "",
       papers: "",
       tags: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof datasetSchema>) => {
-    //   const user_id = session?.user.id;
-    // console.warn(values, user_id);
+  const onSubmit = async (values: z.infer<typeof datasetSchema>) => {
+    if (!file) {
+      toast({
+        description: "Please select a file to upload",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    startTransition(() => {
-      insertDataset(values)
-        .then((data) => {
-          if (data.success) {
-            if (data.success) {
-              toast({
-                // title: { success },
-                description: "Samples uploaded successfully",
-                variant: "default",
-                className: "bg-emerald-500 text-white font-bold ",
-              });
-              form.reset();
-            } else {
-              toast({
-                // title: { error },
-                description: "An error occurred while uploading the samples",
-                variant: "destructive",
-              });
-            }
-          }
-        })
-        .catch((err?: any) => {
-          console.error(err);
-          //   setError("An error occurred during login.");
+    startTransition(async () => {
+      try {
+        // Upload using UploadThing
+        const uploadResult = await startUpload([file]);
+
+        if (!uploadResult || !uploadResult[0]) {
+          throw new Error("File upload failed");
+        }
+
+        const fileUrl = uploadResult[0].url;
+
+        // Then, create the dataset with the file URL
+        const result = await insertDataset({ values, fileUrl });
+
+        if (result.success) {
+          toast({
+            description: "Dataset created successfully",
+            variant: "default",
+            className: "bg-emerald-500 text-white font-bold",
+          });
+          router.push("/datasets");
+        }
+      } catch (error) {
+        console.error(error);
+        toast({
+          description: "An error occurred",
+          variant: "destructive",
         });
+      }
     });
   };
 
@@ -85,14 +92,13 @@ const CreateDatasetForm = () => {
           placeholder="Title"
         />
 
-        <div className="flex gap-2 ">
+        <div className="flex gap-2">
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.SELECT}
             name="year"
             label="Year"
             placeholder="Year"
-
           >
             {years.map((type) => (
               <SelectItem key={type} value={type}>
@@ -115,7 +121,6 @@ const CreateDatasetForm = () => {
             ))}
           </CustomFormField>
         </div>
-
 
         <CustomFormField
           control={form.control}
@@ -149,12 +154,22 @@ const CreateDatasetForm = () => {
           placeholder="Tags"
         />
 
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Upload Dataset File</label>
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            className="w-full"
+            accept=".pdf,.doc,.docx,.txt,.csv"
+          />
+        </div>
+
         <Button
           type="submit"
-          className="w-full bg-primary text-white text-bold hover:bg-primary/80"
-          disabled={isPending}
+          className="w-full"
+          disabled={isPending || !file}
         >
-          Submit
+          {isPending ? "Uploading..." : "Submit"}
         </Button>
       </form>
     </Form>
