@@ -55,7 +55,7 @@ const SignInForm = () => {
             className: "bg-emerald-500 text-white font-bold ",
           });
           form.reset();
-          router.push("/user");
+          router.push("/customer");
           // if (val.data?.user?.role === "admin") {
           //   router.push("/admin");
           // }
