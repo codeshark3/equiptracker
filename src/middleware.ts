@@ -10,6 +10,7 @@ const publicRoutes = [
   "/datasets/create",
   "/datasets/:id*",
   "/datasets/update/:id*",
+  '/api/uploadthing'
 ];
 const authRoutes = ["/sign-in", "/sign-up"];
 const passwordRoutes = ["/reset-password", "/forgot-password"];

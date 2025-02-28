@@ -1,18 +1,39 @@
 import Link from "next/link";
 import React from "react";
 import { getDatasets } from "~/server/dataset_queries";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "~/components/ui/pagination";
 
 import { toast } from "~/hooks/use-toast";
 import { Button } from "~/components/ui/button";
 import DatasetDeleteButton from "~/components/forms/DatasetDeleteButton";
+import { RowsPerPageSelect } from "~/components/RowsPerPageSelect";
 
-const Page = async ({
-  searchParams,
-}: {
-  searchParams: { search?: string };
-}) => {
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+const rowsPerPageOptions = [25, 50, 100];
+
+const DatasetsPage = async ({ searchParams }: Props) => {
   const data = await getDatasets();
-  const searchQuery = searchParams.search?.toLowerCase() || '';
+  const searchQuery = (searchParams?.search as string || '').toLowerCase();
+  const currentPage = Number(searchParams?.page) || 1;
+  const itemsPerPage = Number(searchParams?.perPage) || 25;
 
   const filteredData = searchQuery
     ? data.filter((dataset) =>
@@ -20,6 +41,57 @@ const Page = async ({
       (dataset.description && dataset.description.toLowerCase().includes(searchQuery))
     )
     : data;
+
+  // Pagination calculations
+  const totalItems = filteredData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredData.slice(startIndex, endIndex);
+
+  // Generate pagination range
+  const generatePaginationRange = () => {
+    const range = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    // Always show first page
+    range.push(1);
+
+    // Calculate middle range
+    let start = Math.max(2, currentPage - 1);
+    let end = Math.min(totalPages - 1, currentPage + 1);
+
+    if (currentPage <= 2) {
+      end = 4;
+    }
+    if (currentPage >= totalPages - 1) {
+      start = totalPages - 3;
+    }
+
+    // Add ellipsis if needed
+    if (start > 2) {
+      range.push('...');
+    }
+
+    // Add middle range
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    // Add ellipsis if needed
+    if (end < totalPages - 1) {
+      range.push('...');
+    }
+
+    // Always show last page
+    range.push(totalPages);
+
+    return range;
+  };
 
   return (
     <div>
@@ -43,7 +115,7 @@ const Page = async ({
             <input
               type="text"
               name="search"
-              defaultValue={searchParams.search}
+              defaultValue={searchQuery}
               placeholder="Search datasets..."
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
@@ -70,7 +142,12 @@ const Page = async ({
         </form>
 
         <div className="grid gap-4">
-          {filteredData.length === 0 ? (
+          <div className="flex justify-end items-center gap-2">
+            <span className="text-sm text-gray-500">Rows per page:</span>
+            <RowsPerPageSelect defaultValue={itemsPerPage} />
+          </div>
+
+          {currentItems.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
               <p className="text-gray-500">
                 {searchQuery
@@ -79,27 +156,65 @@ const Page = async ({
               </p>
             </div>
           ) : (
-            <div className="bg-white shadow rounded-lg divide-y">
-              {filteredData.map((dataset) => (
-                <div key={dataset.id} className="p-4 flex items-center justify-between hover:bg-gray-50">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-medium text-gray-900">{dataset.title}</h3>
-                    {dataset.description && (
-                      <p className="mt-1 text-sm text-gray-500 line-clamp-2">{dataset.description}</p>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
+            <>
+              <div className="bg-white shadow rounded-lg divide-y">
+                {currentItems.map((dataset) => (
+                  <div key={dataset.id} className="p-4 flex items-center justify-between hover:bg-gray-50">
                     <Link
                       href={`/datasets/${dataset.id}`}
-                      className="text-primary hover:text-primary/90 px-3 py-1.5 text-sm font-medium rounded-md border border-gray-200 hover:border-primary/30"
-                    >
-                      View Details
+                      className="text-primary hover:text-primary/90 px-3 py-1.5 text-sm font-medium "
+                    >  <div className="flex-1">
+                        <h3 className="text-lg font-medium text-primary">{dataset.title}</h3>
+                        {dataset.description && (
+                          <p className="mt-1 text-sm text-gray-500 line-clamp-2">{dataset.description}</p>
+                        )}
+                      </div>
                     </Link>
-                    <DatasetDeleteButton datasetId={dataset.id} />
                   </div>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between mt-4">
+                <div className="text-sm text-gray-500">
+                  Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of {totalItems} entries
                 </div>
-              ))}
-            </div>
+
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href={`/datasets?page=${currentPage - 1}&perPage=${itemsPerPage}${searchQuery ? `&search=${searchQuery}` : ''}`}
+                        aria-disabled={currentPage <= 1}
+                        className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
+                      />
+                    </PaginationItem>
+
+                    {generatePaginationRange().map((page, index) => (
+                      <PaginationItem key={index}>
+                        {page === '...' ? (
+                          <PaginationEllipsis />
+                        ) : (
+                          <PaginationLink
+                            href={`/datasets?page=${page}&perPage=${itemsPerPage}${searchQuery ? `&search=${searchQuery}` : ''}`}
+                            isActive={currentPage === page}
+                          >
+                            {page}
+                          </PaginationLink>
+                        )}
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        href={`/datasets?page=${currentPage + 1}&perPage=${itemsPerPage}${searchQuery ? `&search=${searchQuery}` : ''}`}
+                        aria-disabled={currentPage >= totalPages}
+                        className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -107,4 +222,4 @@ const Page = async ({
   );
 };
 
-export default Page;
+export default DatasetsPage;

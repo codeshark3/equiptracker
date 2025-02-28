@@ -33,20 +33,20 @@ const DatasetDetailsPage = async ({ params }: Props) => {
   const data = dataset[0] as NonNullable<typeof dataset[0]>;
   const fileUrl = data.fileUrl ? await getUploadthingUrl(data.fileUrl) : null;
 
-  console.log('fileUrl:', fileUrl);
-  console.log('data.fileUrl:', data.fileUrl);
 
   return (
     <div className="mx-auto  px-4 py-8">
-      <div className="text-sm text-gray-500">Debug URL: {fileUrl}</div>
+
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-primary">{data.title}</h1>
         <div className="space-x-3">
           <Link href="/datasets">
             <Button variant="outline">Back to Datasets</Button>
           </Link>
-          {data.fileUrl && <DownloadButton fileUrl={data.fileUrl} />}
-          <Link href={`/datasets/${id}/update`}>
+          <Link href={`/datasets/`}>
+            <Button>Request Access</Button>
+          </Link>
+          <Link href={`/datasets/update/${id}`}>
             <Button>Edit Dataset</Button>
           </Link>
         </div>
@@ -57,7 +57,7 @@ const DatasetDetailsPage = async ({ params }: Props) => {
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="flex items-center space-x-2">
             <Calendar className="h-5 w-5 text-gray-500" />
-            <span className="text-sm font-medium text-gray-500">Year:</span>
+            <span className="text-sm font-medium text-gray-500">Year of Start:</span>
             <span className="text-sm text-primary">{data.year}</span>
           </div>
           <div className="flex items-center space-x-2">
@@ -108,6 +108,7 @@ const DatasetDetailsPage = async ({ params }: Props) => {
             </div>
           </div>
         )}
+        {data.fileUrl && <DownloadButton fileUrl={data.fileUrl} />}
 
         {/* Metadata Footer */}
         <div className="mt-6 border-t pt-4">

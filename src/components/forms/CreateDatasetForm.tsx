@@ -88,8 +88,8 @@ const CreateDatasetForm = () => {
           control={form.control}
           fieldType={FormFieldType.INPUT}
           name="title"
-          label="Title"
-          placeholder="Title"
+          label="Dataset Name"
+          placeholder="Dataset Name"
         />
 
         <div className="flex gap-2">
@@ -97,8 +97,8 @@ const CreateDatasetForm = () => {
             control={form.control}
             fieldType={FormFieldType.SELECT}
             name="year"
-            label="Year"
-            placeholder="Year"
+            label="Year of Start"
+            placeholder="Year of Start"
           >
             {years.map((type) => (
               <SelectItem key={type} value={type}>

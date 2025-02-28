@@ -33,27 +33,30 @@ const Header = async () => {
         </div>
 
         <div className="flex gap-4">
-          <Form action="/search" className="flex gap-1">
+          {/* <Form action="/search" className="flex gap-1">
             <Input type="text" name="query" placeholder="Search..." />
             <Button type="submit">
               <Search className="h-4 w-4" />
             </Button>
-          </Form>
+          </Form> */}
           <div className="hidden border-r md:inline"></div>
 
           {session ? (
-            <form
-              action={async () => {
-                "use server";
-                await auth.api.signOut({
-                  headers: await headers(),
-                });
-                console.log("signed out");
-                redirect("/");
-              }}
-            >
-              <Button type="submit">Sign Out</Button>
-            </form>
+            <div className="flex items-center gap-2">
+              <Link href='/customer' className={buttonVariants()}> Dashboard</Link>
+              <form
+                action={async () => {
+                  "use server";
+                  await auth.api.signOut({
+                    headers: await headers(),
+                  });
+                  console.log("signed out");
+                  redirect("/");
+                }}
+              >
+                <Button type="submit">Sign Out</Button>
+              </form>
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               {" "}

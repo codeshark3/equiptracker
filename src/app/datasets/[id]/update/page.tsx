@@ -76,15 +76,15 @@ const UpdateDatasetForm = () => {
           control={form.control}
           fieldType={FormFieldType.INPUT}
           name="title"
-          label="Title"
-          placeholder="Project Title"
+          label="Dataset Name"
+          placeholder="Dataset Name"
         />
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.SELECT}
           name="year"
-          label="Year"
-          placeholder="Year"
+          label="Year of Start"
+          placeholder="Year of Start"
         >
           {years.map((year) => (
             <SelectItem key={year} value={year}>

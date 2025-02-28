@@ -50,12 +50,12 @@ const SignInForm = () => {
         onSuccess: (val) => {
           toast({
             // title: { success },
-            description: " successfully",
+            description: "Login Successful",
             variant: "default",
             className: "bg-emerald-500 text-white font-bold ",
           });
           form.reset();
-          router.push("/user");
+          router.push("/customer");
           // if (val.data?.user?.role === "admin") {
           //   router.push("/admin");
           // }
@@ -73,7 +73,7 @@ const SignInForm = () => {
         onError: () => {
           toast({
             // title: { error },
-            description: " failed",
+            description: "Login Failed!",
             variant: "default",
             className: "bg-red-500 text-white font-bold ",
           });
@@ -111,8 +111,8 @@ const SignInForm = () => {
               name="email"
               label="Email"
               placeholder="user@email.com"
-              // iconSrc="/assets/icons/email.svg"
-              // iconAlt="email"
+            // iconSrc="/assets/icons/email.svg"
+            // iconAlt="email"
             />
             <CustomFormField
               control={form.control}
@@ -120,8 +120,8 @@ const SignInForm = () => {
               name="password"
               label="Password"
               placeholder="*******"
-              // iconSrc="/assets/icons/email.svg"
-              // iconAlt="email"
+            // iconSrc="/assets/icons/email.svg"
+            // iconAlt="email"
             />
             <Button type="submit" className="w-full bg-primary">
               Sign In
