@@ -17,16 +17,12 @@ import Link from "next/link";
 // You can use a Zod schema here if you want.
 export type Users = {
   id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image?: string | null;
-  role?: string | null; // Make role optional and nullable
-  banned?: boolean | null;
-  banReason?: string | null;
-  banExpires?: number | null;
-  createdAt: string;
-  updatedAt: string;
+  reason: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  datasetId: number;
 };
 export const columns: ColumnDef<Users>[] = [
   // {
@@ -64,92 +60,84 @@ export const columns: ColumnDef<Users>[] = [
     },
   },
   {
-    accessorKey: "name",
+    accessorKey: "reason",
     // header: "Start date",
 
-    header: () => <div className="text-center">Gender</div>,
+    header: () => <div className="text-center">Reason</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-center font-medium">{row.getValue("name")}</div>
+        <div className="text-center font-medium">{row.getValue("reason")}</div>
       );
     },
   },
   {
-    accessorKey: "role",
-    header: "Role",
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => {
       return (
-        <div className="text-center font-medium">{row.getValue("role")}</div>
+        <div className="text-center font-medium">{row.getValue("status")}</div>
       );
     },
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "user_name",
+    header: "User Name",
     cell: ({ row }) => {
       return (
-        <div className="text-center font-medium">{row.getValue("email")}</div>
+        <div className="text-center font-medium">
+          {row.getValue("user_name")}
+        </div>
       );
     },
   },
-
-  //   {
-  //     accessorKey: "source",
-  //     header: "Source",
-  //     cell: ({ row }) => {
-  //       return (
-  //         <div className="text-center font-medium">{row.getValue("source")}</div>
-  //       );
-  //     },
+  {
+    accessorKey: "createdAt",
+    header: "Created At",
+    cell: ({ row }) => {
+      return (
+        <div className="text-center font-medium">
+          {row.getValue("createdAt")}
+        </div>
+      );
+    },
+  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const user = row.original as Users;
+  //     const router = useRouter();
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <MoreHorizontal className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //           <DropdownMenuItem
+  //             onClick={() => router.push(`/admin/users/${user.id}`)}
+  //           >
+  //             Details
+  //             {/* <Link href={`/admin/users/${user.id}`}>Details</Link> */}
+  //           </DropdownMenuItem>
+  //           <DropdownMenuSeparator />
+  //           <DropdownMenuItem
+  //             onClick={() => router.push(`/admin/users/${user.id}`)}
+  //           >
+  //             View Customer
+  //           </DropdownMenuItem>
+  //           <DropdownMenuItem
+  //             onClick={() => console.log("View payment details")}
+  //           >
+  //             View Payment Details
+  //           </DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
   //   },
-  //   {
-  //     accessorKey: "location",
-  //     header: "Location",
-  //     cell: ({ row }) => {
-  //       return (
-  //         <div className="text-center font-medium">
-  //           {row.getValue("location")}
-  //         </div>
-  //       );
-  //     },
-  //   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const user = row.original as Users;
-      const router = useRouter();
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => router.push(`/admin/users/${user.id}`)}
-            >
-              Details
-              {/* <Link href={`/admin/users/${user.id}`}>Details</Link> */}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => router.push(`/admin/users/${user.id}`)}
-            >
-              View Customer
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => console.log("View payment details")}
-            >
-              View Payment Details
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  // },
   // {
   //   header: "Actions",
   //   id: "gactions",

@@ -23,7 +23,6 @@ import {
  */
 export const createTable = pgTableCreator((name) => `csir_dbms_${name}`);
 
-
 export const user = createTable("user", {
   id: text("id").primaryKey(),
   name: varchar("name").notNull(),
@@ -123,6 +122,3 @@ export const access_request = createTable("access_request", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
-
-
-

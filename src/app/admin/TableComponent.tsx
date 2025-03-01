@@ -20,6 +20,10 @@ const TableComponent = () => {
         query: { limit: 10 },
       });
 
+      if (!data) {
+        throw new Error("Failed to fetch users");
+      }
+
       setUsers(data.users);
     } catch (err) {
       console.error("Error fetching users:", err);
