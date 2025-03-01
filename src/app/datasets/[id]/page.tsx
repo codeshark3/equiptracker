@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 import { Calendar, User, Tag, FileText, Building2, Download } from "lucide-react";
 import { getUploadthingUrl } from "~/server/uploadthing";
 import DownloadButton from "./DownloadButton";
+import RequestAccessModal from "./RequestAccessModal";
 
 interface Props {
   params: {
@@ -43,9 +44,7 @@ const DatasetDetailsPage = async ({ params }: Props) => {
           <Link href="/datasets">
             <Button variant="outline">Back to Datasets</Button>
           </Link>
-          <Link href={`/datasets/`}>
-            <Button>Request Access</Button>
-          </Link>
+          <RequestAccessModal datasetId={id} datasetTitle={data.title} />
           <Link href={`/datasets/update/${id}`}>
             <Button>Edit Dataset</Button>
           </Link>

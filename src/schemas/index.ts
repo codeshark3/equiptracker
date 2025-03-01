@@ -92,3 +92,10 @@ export const datasetInsertSchema = datasetSchema.pick({
 
   tags: true, // Optional but needed for insert
 });
+
+export const accessRequestSchema = z.object({
+  reason: z.string().min(1, "Reason is required"),
+
+});
+
+export type AccessRequestInput = z.infer<typeof accessRequestSchema>;

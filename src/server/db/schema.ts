@@ -108,4 +108,21 @@ export const datasetTags = createTable("dataset_tags", {
     .references(() => tags.id),
 });
 
+export const access_request = createTable("access_request", {
+  id: serial("id").primaryKey(),
+  datasetId: integer("dataset_id")
+    .notNull()
+    .references(() => dataset.id),
+  reason: text("reason").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id),
+  status: text("status").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+
 

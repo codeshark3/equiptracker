@@ -22,7 +22,7 @@ import { toast } from "~/hooks/use-toast";
 import { Button } from "~/components/ui/button";
 import DatasetDeleteButton from "~/components/forms/DatasetDeleteButton";
 import { RowsPerPageSelect } from "~/components/RowsPerPageSelect";
-
+import { Input } from "~/components/ui/input";
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
 }
@@ -112,14 +112,14 @@ const DatasetsPage = async ({ searchParams }: Props) => {
 
         <form className="mb-6">
           <div className="relative">
-            <input
+            <Input
               type="text"
               name="search"
               defaultValue={searchQuery}
               placeholder="Search datasets..."
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
-            <button
+            <Button
               type="submit"
               className="absolute right-2 top-1/2 -translate-y-1/2 p-2"
             >
@@ -137,15 +137,12 @@ const DatasetsPage = async ({ searchParams }: Props) => {
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-            </button>
+            </Button>
           </div>
         </form>
 
         <div className="grid gap-4">
-          <div className="flex justify-end items-center gap-2">
-            <span className="text-sm text-gray-500">Rows per page:</span>
-            <RowsPerPageSelect defaultValue={itemsPerPage} />
-          </div>
+
 
           {currentItems.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
@@ -179,7 +176,7 @@ const DatasetsPage = async ({ searchParams }: Props) => {
                   Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of {totalItems} entries
                 </div>
 
-                <Pagination>
+                <Pagination >
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious
@@ -213,6 +210,10 @@ const DatasetsPage = async ({ searchParams }: Props) => {
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
+                <div className="flex justify-end items-center gap-2">
+                  <span className="text-sm text-gray-500">Rows per page:</span>
+                  <RowsPerPageSelect defaultValue={itemsPerPage} />
+                </div>
               </div>
             </>
           )}
