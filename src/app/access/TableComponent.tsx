@@ -1,42 +1,60 @@
-// "use client";
+"use client";
 
-// import { useEffect, useState } from "react";
-// import { DataTable } from "./data-table";
-// import { Users, columns } from "./columns";
+import { useEffect, useState } from "react";
+import { DataTable } from "./data-table";
+import { AccessRequest, columns } from "./columns";
+import { Input } from "~/components/ui/input";
+import { matchSorter } from "match-sorter";
 
+interface TableComponentProps {
+  initialData: AccessRequest[];
+}
 
-// const TableComponent = () => {
-//   const [users, setUsers] = useState<Users[]>([]);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
+const TableComponent = ({ initialData }: TableComponentProps) => {
+  const [users, setUsers] = useState<AccessRequest[]>(initialData);
+  const [globalFilter, setGlobalFilter] = useState("");
 
-//   const fetchUsers = async () => {
-//     try {
-//       //   const response = await authClient.admin.listUsers({
-//       //     query: { limit: 10 },
-//       //   });
+  // Apply fuzzy filtering when globalFilter changes
+  useEffect(() => {
+    if (!globalFilter) {
+      setUsers(initialData);
+      return;
+    }
 
-    
-//     } catch (err) {
-//       console.error("Error fetching users:", err);
-//       setError("Failed to fetch users. Please try again.");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
+    const filteredData = matchSorter(initialData, globalFilter, {
+      keys: [
+        "id",
+        "reason",
+        "status",
+        "user_name",
+        "createdAt",
 
-//   useEffect(() => {
-//     fetchUsers();
-//   }, []);
+        // Add any other fields you want to search through
+      ],
+      threshold: matchSorter.rankings.CONTAINS,
+    });
 
-//   if (isLoading) return <div>Loading...</div>;
-//   if (error) return <div>Error: {error}</div>;
+    setUsers(filteredData);
+  }, [globalFilter, initialData]);
 
-//   return (
-//     <div>
-//       <DataTable columns={columns} data={users} />
-//     </div>
-//   );
-// };
+  return (
+    <div className="space-y-4">
+      {/* <div className="flex items-center justify-between">
+        <Input
+          placeholder="Search all columns..."
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          className="max-w-sm"
+        />
+      </div> */}
+      <DataTable
+        columns={columns}
+        data={users}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      />
+    </div>
+  );
+};
 
-// export default TableComponent;
+export default TableComponent;

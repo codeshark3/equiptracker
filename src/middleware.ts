@@ -20,6 +20,7 @@ const adminRoutes = [
   "/admin/users",
   "/admin/users/new",
   "/admin/users/[id]",
+  "/access",
 ];
 const customerRoutes = ["/customer"];
 
@@ -39,7 +40,7 @@ export default async function authMiddleware(request: NextRequest) {
   console.log(
     "Path:",
     pathName,
-    "isDynamicDataset:",
+    "isDynamicRoute:",
     isDynamicDatasetRoute,
     "isPublic:",
     isPublicRoute,

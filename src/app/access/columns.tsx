@@ -15,16 +15,15 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Users = {
-  id: string;
+export type AccessRequest = {
+  user_name: string;
+  id: number;
   reason: string;
   status: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: string;
-  datasetId: number;
+  createdAt: string;
 };
-export const columns: ColumnDef<Users>[] = [
+
+export const columns: ColumnDef<AccessRequest>[] = [
   // {
   //   accessorKey: "sample_id",
   //   header: ({ column }) => {
@@ -75,7 +74,17 @@ export const columns: ColumnDef<Users>[] = [
     header: "Status",
     cell: ({ row }) => {
       return (
-        <div className="text-center font-medium">{row.getValue("status")}</div>
+        <span
+          className={`rounded-md px-2 py-1 text-center text-sm font-medium ${
+            row.getValue("status") === "approved"
+              ? "bg-emerald-500 text-white"
+              : row.getValue("status") === "rejected"
+                ? "bg-red-500 text-white"
+                : "bg-gray-500 text-white"
+          }`}
+        >
+          {row.getValue("status")}
+        </span>
       );
     },
   },

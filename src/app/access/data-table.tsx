@@ -39,21 +39,25 @@ import { PlusSquare } from "lucide-react";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
 interface DataTableProps<TData extends { id: number | string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  globalFilter?: string;
+  setGlobalFilter?: Dispatch<SetStateAction<string>>;
 }
 
 export function DataTable<TData extends { id: number | string }, TValue>({
   columns,
   data,
+  globalFilter,
+  setGlobalFilter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
-  const [globalFilter, setGlobalFilter] = React.useState<any>([]);
 
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -85,12 +89,10 @@ export function DataTable<TData extends { id: number | string }, TValue>({
       {" "}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter Id..."
-          value={(table.getColumn("id")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("id")?.setFilterValue(event.target.value)
-          }
+          placeholder="Search..."
           className="max-w-sm"
+          value={globalFilter ?? ""}
+          onChange={(e) => setGlobalFilter?.(e.target.value)}
         />
         {/* <Input
           placeholder="Filter emails..."
@@ -124,13 +126,6 @@ export function DataTable<TData extends { id: number | string }, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>{" "}
-        <Link
-          href="/admin/users/new"
-          className="ml-2 rounded-md bg-primary p-2 text-white"
-        >
-          {" "}
-          <PlusSquare className="h-5 w-5 hover:bg-transparent" />
-        </Link>
       </div>
       <div className="rounded-md border">
         <Table>
