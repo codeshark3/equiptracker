@@ -122,3 +122,17 @@ export const access_request = createTable("access_request", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+export const saved_dataset = createTable("saved_dataset", {
+  id: serial("id").primaryKey(),
+  datasetId: integer("dataset_id")
+    .notNull()
+    .references(() => dataset.id),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .$onUpdate(() => new Date()),
+});

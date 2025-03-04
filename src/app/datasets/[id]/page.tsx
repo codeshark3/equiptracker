@@ -17,15 +17,12 @@ import {
   checkPendingRequest,
   hasApprovedAccess,
 } from "~/server/access_request_queries";
+import SaveDatasetButton from "./SaveDatasetButton";
 
-interface Props {
-  params: {
-    id: number;
-  };
-}
-
-const DatasetDetailsPage = async ({ params }: Props) => {
-  const { id } = params;
+const DatasetDetailsPage = async (props: {
+  params: Promise<{ id: number }>;
+}) => {
+  const { id } = await props.params;
   const dataset = await getDatasetById(id);
   const hasPendingRequest = await checkPendingRequest(id);
   const hasAccess = await hasApprovedAccess(id);
@@ -64,6 +61,7 @@ const DatasetDetailsPage = async ({ params }: Props) => {
             datasetTitle={data.title}
             disabled={hasPendingRequest}
           />
+          <SaveDatasetButton datasetId={data.id} />
           <Link href={`/datasets/${id}/update`}>
             <Button>Edit Dataset</Button>
           </Link>

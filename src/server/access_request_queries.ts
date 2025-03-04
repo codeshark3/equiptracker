@@ -82,7 +82,7 @@ export async function getAllAccessRequests() {
   }
 }
 
-export async function getAccessRequests() {
+export async function getAllUserAccessRequests() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

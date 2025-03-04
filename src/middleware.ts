@@ -10,7 +10,7 @@ const publicRoutes = [
   "/datasets/create",
   "/datasets/:id*",
   "/datasets/update/:id*",
-  '/api/uploadthing'
+  "/api/uploadthing",
 ];
 const authRoutes = ["/sign-in", "/sign-up"];
 const passwordRoutes = ["/reset-password", "/forgot-password"];
@@ -28,14 +28,22 @@ export default async function authMiddleware(request: NextRequest) {
   // Check if it's a dynamic dataset route like /datasets/123
   const isDynamicDatasetRoute = /^\/datasets\/[^\/]+/.test(pathName);
   // Check if the request path matches any of the defined routes
-  const isPublicRoute = publicRoutes.includes(pathName) || isDynamicDatasetRoute;
+  const isPublicRoute =
+    publicRoutes.includes(pathName) || isDynamicDatasetRoute;
   const isAuthRoute = authRoutes.includes(pathName);
   const isPasswordRoute = passwordRoutes.includes(pathName);
   const isStaffRoute = staffRoutes.includes(pathName);
   const isAdminRoute = adminRoutes.some((route) => pathName.includes(route));
   const isCustomerRoute = customerRoutes.includes(pathName);
 
-  console.log('Path:', pathName, 'isDynamicDataset:', isDynamicDatasetRoute, 'isPublic:', isPublicRoute);
+  console.log(
+    "Path:",
+    pathName,
+    "isDynamicDataset:",
+    isDynamicDatasetRoute,
+    "isPublic:",
+    isPublicRoute,
+  );
 
   // Fetch session from API
   const { data: session } = await betterFetch<Session>(
@@ -88,9 +96,7 @@ export default async function authMiddleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|.*\\.png$).*)|/datasets/:id*/update",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };
 
 // import { betterFetch } from "@better-fetch/fetch";
