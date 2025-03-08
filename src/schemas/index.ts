@@ -79,6 +79,11 @@ export const datasetSchema = z.object({
   fileUrl: z.string().optional(),
 });
 
+export const papersSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  url: z.string().url("Must be a valid URL"),
+});
+
 // TypeScript type inference
 export type DatasetInput = z.infer<typeof datasetSchema>;
 
@@ -95,7 +100,6 @@ export const datasetInsertSchema = datasetSchema.pick({
 
 export const accessRequestSchema = z.object({
   reason: z.string().min(1, "Reason is required"),
-
 });
 
 export type AccessRequestInput = z.infer<typeof accessRequestSchema>;

@@ -75,7 +75,7 @@ export const verification = createTable("verification", {
 });
 
 export const dataset = createTable("dataset", {
-  id: serial("id").primaryKey(),
+  id: text("id").primaryKey(),
   title: text("title").notNull(),
   year: text("year").notNull(),
   pi_name: text("pi_name").notNull(),
@@ -99,7 +99,7 @@ export const tags = createTable("tags", {
 
 // Junction Table (Many-to-Many Relationship)
 export const datasetTags = createTable("dataset_tags", {
-  datasetId: integer("dataset_id")
+  datasetId: text("dataset_id")
     .notNull()
     .references(() => dataset.id),
   tagId: integer("tag_id")
@@ -109,7 +109,7 @@ export const datasetTags = createTable("dataset_tags", {
 
 export const access_request = createTable("access_request", {
   id: serial("id").primaryKey(),
-  datasetId: integer("dataset_id")
+  datasetId: text("dataset_id")
     .notNull()
     .references(() => dataset.id),
   reason: text("reason").notNull(),
@@ -125,7 +125,7 @@ export const access_request = createTable("access_request", {
 
 export const saved_dataset = createTable("saved_dataset", {
   id: serial("id").primaryKey(),
-  datasetId: integer("dataset_id")
+  datasetId: text("dataset_id")
     .notNull()
     .references(() => dataset.id),
   userId: text("user_id")
@@ -135,4 +135,15 @@ export const saved_dataset = createTable("saved_dataset", {
   updatedAt: timestamp("updated_at")
     .notNull()
     .$onUpdate(() => new Date()),
+});
+
+export const papers = createTable("papers", {
+  id: serial("id").primaryKey(),
+  datasetId: text("dataset_id")
+    .notNull()
+    .references(() => dataset.id),
+  title: text("title").notNull(),
+  url: text("url").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  userId: text("user_id").references(() => user.id),
 });

@@ -9,7 +9,7 @@ import { Form } from "~/components/ui/form";
 import { FormFieldType } from "~/components/CustomFormField";
 import { toast } from "~/hooks/use-toast";
 import { Button } from "~/components/ui/button";
-
+import { v4 as uuidv4 } from "uuid";
 import { datasetSchema } from "~/schemas";
 import { years, divisions } from "~/constants";
 import { authClient } from "~/lib/auth-client";
@@ -18,8 +18,6 @@ import { useRouter } from "next/navigation";
 import { UploadDropzone } from "@uploadthing/react";
 import { useState } from "react";
 import { useUploadThing } from "~/utils/uploadthing";
-
-
 
 const CreateDatasetForm = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -49,6 +47,8 @@ const CreateDatasetForm = () => {
       return;
     }
 
+    const datasetId = uuidv4();
+
     startTransition(async () => {
       try {
         // Upload using UploadThing
@@ -61,7 +61,7 @@ const CreateDatasetForm = () => {
         const fileUrl = uploadResult[0].url;
 
         // Then, create the dataset with the file URL
-        const result = await insertDataset({ values, fileUrl });
+        const result = await insertDataset({ values, fileUrl, datasetId });
 
         if (result.success) {
           toast({
@@ -164,11 +164,7 @@ const CreateDatasetForm = () => {
           />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isPending || !file}
-        >
+        <Button type="submit" className="w-full" disabled={isPending || !file}>
           {isPending ? "Uploading..." : "Submit"}
         </Button>
       </form>

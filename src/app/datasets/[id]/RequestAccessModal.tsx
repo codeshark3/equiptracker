@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface RequestAccessModalProps {
-  datasetId: number;
+  datasetId: string;
   datasetTitle: string;
   disabled?: boolean;
 }

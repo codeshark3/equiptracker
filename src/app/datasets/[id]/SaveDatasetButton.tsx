@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 import { LucideSave } from "lucide-react";
 import { saveDataset, checkSavedDataset } from "~/server/dataset_queries";
 import { useToast } from "~/hooks/use-toast";
-const SaveDatasetButton = ({ datasetId }: { datasetId: number }) => {
+const SaveDatasetButton = ({ datasetId }: { datasetId: string }) => {
   const { toast } = useToast();
 
   const [isSaved, setIsSaved] = useState(false);
@@ -16,7 +16,7 @@ const SaveDatasetButton = ({ datasetId }: { datasetId: number }) => {
     checkSaved();
   }, [datasetId]);
 
-  const handleSaveDataset = async (datasetId: number) => {
+  const handleSaveDataset = async (datasetId: string) => {
     const result = await saveDataset(datasetId);
 
     if (result?.error) {

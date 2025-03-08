@@ -4,8 +4,8 @@ import Link from "next/link";
 import { getAccessRequestById } from "~/server/access_request_queries";
 import { Building, User, Calendar, Mail } from "lucide-react";
 import AccessRequestActions from "./AccessRequestActions";
-const page = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const page = async (props: { params: Promise<{ id: string }> }) => {
+  const { id } = await props.params;
   const accessRequest = await getAccessRequestById(parseInt(id));
 
   if (!Array.isArray(accessRequest) || accessRequest.length === 0) {

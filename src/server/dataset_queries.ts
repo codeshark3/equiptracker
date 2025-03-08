@@ -3,13 +3,18 @@
 import { db } from "./db";
 import * as z from "zod";
 import { and, eq } from "drizzle-orm";
-import { datasetInsertSchema, datasetSchema } from "~/schemas/index";
+import {
+  datasetInsertSchema,
+  datasetSchema,
+  papersSchema,
+} from "~/schemas/index";
 import {
   dataset,
   tags,
   datasetTags,
   saved_dataset,
   access_request,
+  papers,
 } from "./db/schema";
 import { auth } from "~/lib/auth";
 import { headers } from "next/headers";
@@ -18,9 +23,11 @@ import { revalidatePath } from "next/cache";
 export async function insertDataset({
   values,
   fileUrl,
+  datasetId,
 }: {
   values: z.infer<typeof datasetSchema>;
   fileUrl: string;
+  datasetId: string;
 }) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -38,6 +45,7 @@ export async function insertDataset({
 
   try {
     await db.insert(dataset).values({
+      id: datasetId,
       title,
       year,
       pi_name,
@@ -55,12 +63,28 @@ export async function insertDataset({
   }
 }
 
+export async function insertPapers(
+  values: z.infer<typeof papersSchema>,
+  datasetId: string,
+) {
+  const validatedFields = papersSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: "Invalid Fields!" };
+  }
+  const { title, url } = validatedFields.data;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user_id = session?.user.id;
+  await db.insert(papers).values({ title, url, datasetId, userId: user_id });
+}
+
 export async function getDatasets() {
   const datasets = await db.select().from(dataset);
   return datasets;
 }
 
-export async function getDatasetById(id: number) {
+export async function getDatasetById(id: string) {
   const returnedDataset = await db
     .select()
     .from(dataset)
@@ -68,7 +92,7 @@ export async function getDatasetById(id: number) {
   return returnedDataset;
 }
 
-export async function deleteDataset(id: number) {
+export async function deleteDataset(id: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -84,7 +108,7 @@ export async function deleteDataset(id: number) {
   }
 }
 export async function updateDataset(
-  id: number,
+  id: string,
   data: z.infer<typeof datasetSchema>,
 ) {
   const session = await auth.api.getSession({
@@ -101,7 +125,7 @@ export async function updateDataset(
   }
 }
 
-export async function saveDataset(datasetId: number) {
+export async function saveDataset(datasetId: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -115,7 +139,7 @@ export async function saveDataset(datasetId: number) {
   }
 }
 
-export async function checkSavedDataset(datasetId: number) {
+export async function checkSavedDataset(datasetId: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -153,15 +177,15 @@ export async function getSavedDatasets() {
       status: access_request.status,
     })
     .from(saved_dataset)
-    .leftJoin(dataset, eq(saved_dataset.datasetId, dataset.id))
-    .leftJoin(access_request, eq(saved_dataset.id, access_request.datasetId))
+    .innerJoin(dataset, eq(saved_dataset.datasetId, dataset.id))
+    .innerJoin(access_request, eq(saved_dataset.id, access_request.datasetId))
     .where(eq(saved_dataset.userId, user_id));
   return savedDatasets;
 }
 {
 }
 
-export async function deleteSavedDataset(datasetId: number) {
+export async function deleteSavedDataset(datasetId: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

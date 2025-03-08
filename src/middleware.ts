@@ -21,8 +21,14 @@ const adminRoutes = [
   "/admin/users/new",
   "/admin/users/[id]",
   "/access",
+  "/access/[id]",
 ];
-const customerRoutes = ["/customer"];
+const customerRoutes = [
+  "/customer",
+
+  "/customer/access",
+  "/customer/access/[id]",
+];
 
 export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
@@ -78,7 +84,7 @@ export default async function authMiddleware(request: NextRequest) {
 
   // Admin can access public and admin routes only
   if (role === "admin") {
-    if (isPublicRoute || isAdminRoute) {
+    if (isPublicRoute || isAdminRoute || isStaffRoute || isCustomerRoute) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/admin", request.url));
