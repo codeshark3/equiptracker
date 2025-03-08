@@ -16,9 +16,10 @@ import { authClient } from "~/lib/auth-client";
 import { insertDataset } from "~/server/dataset_queries";
 import { useRouter } from "next/navigation";
 import { UploadDropzone } from "@uploadthing/react";
+import { papersSchema } from "~/schemas";
 import { useState } from "react";
 import { useUploadThing } from "~/utils/uploadthing";
-
+import { X } from "lucide-react";
 const CreateDatasetForm = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -33,7 +34,7 @@ const CreateDatasetForm = () => {
       description: "",
       division: "", // Default to some valid division ID
       fileUrl: "",
-      papers: "",
+      papers: [] as { title: string; url: string }[],
       tags: "",
     },
   });
@@ -138,14 +139,54 @@ const CreateDatasetForm = () => {
           placeholder="Description"
         />
 
-        <CustomFormField
-          control={form.control}
-          fieldType={FormFieldType.TEXTAREA}
-          name="papers"
-          label="Papers"
-          placeholder="Papers"
-        />
-
+        <div>
+          {(form.watch("papers") || []).map((paper, index) => (
+            <div key={index} className="mb-4 flex items-center gap-2">
+              <div className="w-1/2">
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.INPUT}
+                  name={`papers.${index}.title`}
+                  label="Paper Title"
+                  placeholder="Paper Title"
+                />
+              </div>
+              <div className="w-1/2">
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.INPUT}
+                  name={`papers.${index}.url`}
+                  label="Paper URL"
+                  placeholder="Paper URL"
+                />
+              </div>
+              {index >= 0 && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => {
+                    const papers = form.getValues("papers") || [];
+                    papers.splice(index, 1);
+                    form.setValue("papers", papers);
+                  }}
+                  className="mt-4"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              const papers = form.getValues("papers") || [];
+              form.setValue("papers", [...papers, { title: "", url: "" }]);
+            }}
+          >
+            Add Paper
+          </Button>
+        </div>
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.INPUT}

@@ -187,21 +187,13 @@ async function hasExistingPendingRequest(userId: string, datasetId: string) {
   return existingRequest.length > 0;
 }
 
-export async function checkPendingRequest(datasetId: string) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const user_id = session?.user.id;
+export async function checkPendingRequest(datasetId: string, user_id: string) {
   if (!user_id) return false;
 
   return hasExistingPendingRequest(user_id, datasetId);
 }
 
-export async function hasApprovedAccess(datasetId: string) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const user_id = session?.user.id;
+export async function hasApprovedAccess(datasetId: string, user_id: string) {
   if (!user_id) return false;
 
   const request = await db

@@ -14,7 +14,7 @@ import {
   datasetTags,
   saved_dataset,
   access_request,
-  papers,
+  //  papers,
 } from "./db/schema";
 import { auth } from "~/lib/auth";
 import { headers } from "next/headers";
@@ -36,9 +36,7 @@ export async function insertDataset({
   const user_id = session?.user.id;
   const validatedFields = datasetSchema.safeParse(values);
   if (!validatedFields.success) {
-    return {
-      error: "Invalid Fields!",
-    };
+    return { error: "Invalid Fields!" };
   }
   const { title, year, pi_name, description, division, papers, tags } =
     validatedFields.data;
@@ -51,7 +49,7 @@ export async function insertDataset({
       pi_name,
       description,
       division,
-      papers,
+      papers: JSON.stringify(papers),
       tags,
       user_id: user_id,
       fileUrl: fileUrl,
@@ -63,21 +61,21 @@ export async function insertDataset({
   }
 }
 
-export async function insertPapers(
-  values: z.infer<typeof papersSchema>,
-  datasetId: string,
-) {
-  const validatedFields = papersSchema.safeParse(values);
-  if (!validatedFields.success) {
-    return { error: "Invalid Fields!" };
-  }
-  const { title, url } = validatedFields.data;
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const user_id = session?.user.id;
-  await db.insert(papers).values({ title, url, datasetId, userId: user_id });
-}
+// export async function insertPapers(
+//   values: z.infer<typeof papersSchema>,
+//   datasetId: string,
+// ) {
+//   const validatedFields = papersSchema.safeParse(values);
+//   if (!validatedFields.success) {
+//     return { error: "Invalid Fields!" };
+//   }
+//   const { title, url } = validatedFields.data;
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
+//   const user_id = session?.user.id;
+//   await db.insert(papers).values({ title, url, datasetId, userId: user_id });
+// }
 
 export async function getDatasets() {
   const datasets = await db.select().from(dataset);
@@ -116,8 +114,15 @@ export async function updateDataset(
   });
   if (!session?.user?.id) throw new Error("Unauthorized");
   const user_id = session.user.id;
+
+  // Convert papers array to string
+  const formattedData = {
+    ...data,
+    papers: JSON.stringify(data.papers),
+  };
+
   try {
-    await db.update(dataset).set(data).where(eq(dataset.id, id));
+    await db.update(dataset).set(formattedData).where(eq(dataset.id, id));
     revalidatePath("/datasets");
     return { success: true, message: "Dataset updated successfully!" };
   } catch (error: any) {
@@ -177,8 +182,14 @@ export async function getSavedDatasets() {
       status: access_request.status,
     })
     .from(saved_dataset)
-    .innerJoin(dataset, eq(saved_dataset.datasetId, dataset.id))
-    .innerJoin(access_request, eq(saved_dataset.id, access_request.datasetId))
+    .leftJoin(dataset, eq(saved_dataset.datasetId, dataset.id))
+    .leftJoin(
+      access_request,
+      and(
+        eq(access_request.datasetId, saved_dataset.datasetId),
+        eq(access_request.userId, saved_dataset.userId),
+      ),
+    )
     .where(eq(saved_dataset.userId, user_id));
   return savedDatasets;
 }

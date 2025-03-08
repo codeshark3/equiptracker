@@ -137,13 +137,13 @@ export const saved_dataset = createTable("saved_dataset", {
     .$onUpdate(() => new Date()),
 });
 
-export const papers = createTable("papers", {
-  id: serial("id").primaryKey(),
-  datasetId: text("dataset_id")
-    .notNull()
-    .references(() => dataset.id),
-  title: text("title").notNull(),
-  url: text("url").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  userId: text("user_id").references(() => user.id),
-});
+// export const papers = createTable("papers", {
+//   id: serial("id").primaryKey(),
+//   datasetId: text("dataset_id")
+//     .notNull()
+//     .references(() => dataset.id),
+//   title: text("title").notNull(),
+//   url: text("url").notNull(),
+//   createdAt: timestamp("created_at").notNull().defaultNow(),
+//   userId: text("user_id").references(() => user.id),
+// });

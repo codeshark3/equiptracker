@@ -18,14 +18,23 @@ import {
   hasApprovedAccess,
 } from "~/server/access_request_queries";
 import SaveDatasetButton from "./SaveDatasetButton";
+import { headers } from "next/headers";
+import { auth } from "~/lib/auth";
 
 const DatasetDetailsPage = async (props: {
-  params: Promise<{ id: number }>;
+  params: Promise<{ id: string }>;
 }) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user_role = session?.user.role;
+  const user_id = session?.user.id;
   const { id } = await props.params;
   const dataset = await getDatasetById(id);
-  const hasPendingRequest = await checkPendingRequest(id);
-  const hasAccess = await hasApprovedAccess(id);
+  const hasPendingRequest = user_id
+    ? await checkPendingRequest(id, user_id)
+    : false;
+  const hasAccess = user_id ? await hasApprovedAccess(id, user_id) : false;
 
   if (!dataset || dataset.length === 0) {
     return (
@@ -50,9 +59,9 @@ const DatasetDetailsPage = async (props: {
 
   return (
     <div className="mx-auto w-full px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex-col items-center justify-between">
         <h1 className="text-3xl font-bold text-primary">{data.title}</h1>
-        <div className="space-x-3">
+        <div className="mt-1 space-x-3">
           <Link href="/datasets">
             <Button variant="outline">Back to Datasets</Button>
           </Link>
@@ -61,10 +70,13 @@ const DatasetDetailsPage = async (props: {
             datasetTitle={data.title}
             disabled={hasPendingRequest}
           />
-          <SaveDatasetButton datasetId={data.id} />
-          <Link href={`/datasets/${id}/update`}>
-            <Button>Edit Dataset</Button>
-          </Link>
+          <SaveDatasetButton datasetId={data.id} disabled={hasPendingRequest} />
+          {user_role === "admin" ||
+            (user_role === "staff" && (
+              <Link href={`/datasets/${id}/update`}>
+                <Button>Edit Dataset</Button>
+              </Link>
+            ))}
         </div>
       </div>
 
@@ -124,13 +136,31 @@ const DatasetDetailsPage = async (props: {
             <h2 className="mb-2 text-lg font-semibold text-primary">
               Related Papers
             </h2>
-            <div className="rounded-md bg-gray-50 p-4">
-              <div className="flex items-start space-x-2">
-                <FileText className="h-5 w-5 text-gray-500" />
-                <p className="whitespace-pre-wrap text-gray-700">
-                  {data.papers}
-                </p>
-              </div>
+            <div className="space-y-2">
+              {JSON.parse(data.papers).map(
+                (paper: { title: string; url: string }, index: number) => (
+                  <div key={index} className="rounded-md bg-gray-50 p-4">
+                    <div className="flex items-start space-x-2">
+                      <FileText className="h-5 w-5 text-gray-500" />
+                      <div className="flex justify-between gap-2">
+                        <div className="w-1/2">
+                          <p className="text-gray-700">{paper.title}</p>
+                        </div>
+                        <div className="w-1/2">
+                          <a
+                            href={paper.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {paper.url}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ),
+              )}
             </div>
           </div>
         )}

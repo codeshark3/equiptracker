@@ -64,6 +64,11 @@ export const SignUpSchema = z
 //   tagIds: z.array(z.number()).optional(),
 // });
 
+export const papersSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  url: z.string().url("Must be a valid URL"),
+});
+
 export const datasetSchema = z.object({
   title: z.string().min(1, "Title is required"),
   year: z
@@ -74,14 +79,9 @@ export const datasetSchema = z.object({
   description: z.string(),
   division: z.string().min(1, "Division is required"),
 
-  papers: z.string(),
-  tags: z.string(), // Ensure IDs match DB type
+  papers: z.array(papersSchema).optional(),
+  tags: z.string().optional(), // Ensure IDs match DB type
   fileUrl: z.string().optional(),
-});
-
-export const papersSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  url: z.string().url("Must be a valid URL"),
 });
 
 // TypeScript type inference

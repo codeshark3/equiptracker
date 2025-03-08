@@ -4,7 +4,13 @@ import { Button } from "~/components/ui/button";
 import { LucideSave } from "lucide-react";
 import { saveDataset, checkSavedDataset } from "~/server/dataset_queries";
 import { useToast } from "~/hooks/use-toast";
-const SaveDatasetButton = ({ datasetId }: { datasetId: string }) => {
+const SaveDatasetButton = ({
+  datasetId,
+  disabled,
+}: {
+  datasetId: string;
+  disabled: boolean;
+}) => {
   const { toast } = useToast();
 
   const [isSaved, setIsSaved] = useState(false);
@@ -39,7 +45,7 @@ const SaveDatasetButton = ({ datasetId }: { datasetId: string }) => {
     <Button
       variant="secondary"
       onClick={() => handleSaveDataset(datasetId)}
-      disabled={isSaved}
+      disabled={isSaved || disabled}
     >
       <LucideSave className="mr-2 h-4 w-4" />
       Save Dataset
