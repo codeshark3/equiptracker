@@ -2,7 +2,7 @@ import { MoveRight, PhoneCall } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import Image from "next/image";
-
+import Link from "next/link";
 export const Hero = () => (
   <div className="w-full py-16 lg:py-32">
     <div className="container mx-auto">
@@ -38,6 +38,12 @@ export const Hero = () => (
             <Button size="lg" className="gap-4">
               Sign up here <MoveRight className="h-4 w-4" />
             </Button>
+
+            <Link href="/searchpage">
+              <Button size="lg" className="gap-4">
+                Search Datasets <MoveRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="aspect-square rounded-md bg-muted">

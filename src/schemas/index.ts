@@ -66,7 +66,7 @@ export const SignUpSchema = z
 
 export const papersSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  url: z.string().url("Must be a valid URL"),
+  url: z.string().min(1, "Reference is required"),
 });
 
 export const datasetSchema = z.object({

@@ -15,13 +15,13 @@ const page = async (props: { params: Promise<{ id: string }> }) => {
   const request = accessRequest[0] as NonNullable<(typeof accessRequest)[0]>;
   return (
     <div className="mx-auto w-full px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-primary">
           {request.dataset_title}
         </h1>
-        <div className="flex gap-2">
-          <Link href="/datasets">
-            <Button variant="outline">Back to Datasets</Button>
+        <div className="mt-4 flex gap-2">
+          <Link href="/access">
+            <Button variant="outline">Back to Requests</Button>
           </Link>
           <AccessRequestActions requestId={request.access_request_id} />
         </div>

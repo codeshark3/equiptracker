@@ -161,18 +161,20 @@ const CreateDatasetForm = () => {
                 />
               </div>
               {index >= 0 && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => {
-                    const papers = form.getValues("papers") || [];
-                    papers.splice(index, 1);
-                    form.setValue("papers", papers);
-                  }}
-                  className="mt-4"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <div className="mt-4">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => {
+                      const papers = form.getValues("papers") || [];
+                      papers.splice(index, 1);
+                      form.setValue("papers", papers);
+                    }}
+                    className="mt-4"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               )}
             </div>
           ))}

@@ -28,14 +28,14 @@ export type SavedDataset = {
 
 export const columns: ColumnDef<SavedDataset>[] = [
   {
-    accessorKey: "datasetId",
+    accessorKey: "id",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Dataset ID
+          ID
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

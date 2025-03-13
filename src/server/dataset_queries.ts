@@ -2,7 +2,7 @@
 "use server";
 import { db } from "./db";
 import * as z from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike, or } from "drizzle-orm";
 import {
   datasetInsertSchema,
   datasetSchema,
@@ -79,6 +79,30 @@ export async function insertDataset({
 
 export async function getDatasets() {
   const datasets = await db.select().from(dataset);
+  return datasets;
+}
+export async function getDatasetsForSearch(query: string) {
+  const datasets = await db
+    .select({
+      id: dataset.id,
+      title: dataset.title,
+      year: dataset.year,
+      pi_name: dataset.pi_name,
+
+      division: dataset.division,
+      description: dataset.description,
+    })
+    .from(dataset)
+    .where(
+      or(
+        ilike(dataset.title, `%${query}%`),
+        ilike(dataset.description, `%${query}%`),
+        ilike(dataset.pi_name, `%${query}%`),
+        ilike(dataset.division, `%${query}%`),
+        ilike(dataset.year, `%${query}%`),
+      ),
+    );
+
   return datasets;
 }
 

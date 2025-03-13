@@ -6,26 +6,33 @@ import type { Session } from "~/lib/auth";
 const publicRoutes = [
   "/",
   "/search",
-  "/datasets",
-  "/datasets/create",
-  "/datasets/:id*",
-  "/datasets/update/:id*",
+  // "/datasets",
+  // "/dataset/[id]",
   "/api/uploadthing",
+  "/searchpage",
+  "/searchpage/[id]",
 ];
 const authRoutes = ["/sign-in", "/sign-up"];
 const passwordRoutes = ["/reset-password", "/forgot-password"];
-const staffRoutes = ["/staff"];
+const staffRoutes = [
+  "/staff",
+  "/datasets/create",
+  "/datasets/update/:id*",
+  "/access",
+  "/access/[id]",
+];
 const adminRoutes = [
   "/admin",
   "/admin/users",
   "/admin/users/new",
   "/admin/users/[id]",
+  "/datasets/create",
+  "/datasets/update/:id*",
   "/access",
   "/access/[id]",
 ];
 const customerRoutes = [
   "/customer",
-
   "/customer/access",
   "/customer/access/[id]",
 ];
@@ -33,21 +40,26 @@ const customerRoutes = [
 export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
   // Check if it's a dynamic dataset route like /datasets/123
-  const isDynamicDatasetRoute = /^\/datasets\/[^\/]+/.test(pathName);
+  const isDynamicDatasetRoute = /^\/datasets\/[^\/]+$/.test(pathName);
+  // Check if it's a dynamic searchpage route
+  const isDynamicSearchRoute = /^\/searchpage\/[^\/]+$/.test(pathName);
   // Check if the request path matches any of the defined routes
   const isPublicRoute =
-    publicRoutes.includes(pathName) || isDynamicDatasetRoute;
+    publicRoutes.includes(pathName) ||
+    isDynamicDatasetRoute ||
+    isDynamicSearchRoute;
   const isAuthRoute = authRoutes.includes(pathName);
   const isPasswordRoute = passwordRoutes.includes(pathName);
   const isStaffRoute = staffRoutes.includes(pathName);
-  const isAdminRoute = adminRoutes.some((route) => pathName.includes(route));
+  const isDynamicAdminRoute = /^\/admin\/[^\/]+/.test(pathName);
+  const isAdminRoute = adminRoutes.includes(pathName) || isDynamicAdminRoute;
   const isCustomerRoute = customerRoutes.includes(pathName);
 
   console.log(
     "Path:",
     pathName,
     "isDynamicRoute:",
-    isDynamicDatasetRoute,
+    isDynamicDatasetRoute || isDynamicSearchRoute,
     "isPublic:",
     isPublicRoute,
   );

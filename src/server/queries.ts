@@ -6,6 +6,7 @@ import { dataset, user } from "./db/schema";
 import { and, eq } from "drizzle-orm";
 import { SignInSchema, datasetSchema } from "~/schemas/index";
 import type * as z from "zod";
+import { headers } from "next/headers";
 // import { validateRequest } from "~/auth";
 
 export async function getUsersByName(keyword: string) {
