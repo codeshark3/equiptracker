@@ -16,6 +16,7 @@ const authRoutes = ["/sign-in", "/sign-up"];
 const passwordRoutes = ["/reset-password", "/forgot-password"];
 const staffRoutes = [
   "/staff",
+  "/datasets",
   "/datasets/create",
   "/datasets/update/:id*",
   "/access",
@@ -28,6 +29,8 @@ const adminRoutes = [
   "/admin/users/[id]",
   "/datasets/create",
   "/datasets/update/:id*",
+  "/datasets",
+  "/datasets/delete/:id*",
   "/access",
   "/access/[id]",
 ];
