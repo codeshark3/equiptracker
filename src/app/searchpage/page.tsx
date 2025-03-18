@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Input } from "~/components/ui/input";
 import { Search } from "lucide-react";
 import { getDatasetsForSearch } from "~/server/dataset_queries";
 import Link from "next/link";
 import Image from "next/image";
+import debounce from "lodash/debounce";
+
 interface Dataset {
   id: string;
   title: string;
@@ -20,21 +22,28 @@ const Page = () => {
   const [results, setResults] = useState<Dataset[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleSearch = async (searchQuery: string) => {
-    if (searchQuery.length < 2) {
-      setResults([]);
-      setShowDropdown(false);
-      return;
-    }
+  const debouncedSearch = useCallback(
+    debounce(async (searchQuery: string) => {
+      if (searchQuery.length < 2) {
+        setResults([]);
+        setShowDropdown(false);
+        return;
+      }
 
-    try {
-      const data = await getDatasetsForSearch(searchQuery);
+      try {
+        const data = await getDatasetsForSearch(searchQuery);
+        setResults(data);
+        setShowDropdown(true);
+      } catch (error) {
+        console.error("Search error:", error);
+      }
+    }, 300),
+    [],
+  );
 
-      setResults(data);
-      setShowDropdown(true);
-    } catch (error) {
-      console.error("Search error:", error);
-    }
+  const handleSearch = (searchQuery: string) => {
+    setQuery(searchQuery);
+    debouncedSearch(searchQuery);
   };
 
   return (
@@ -56,10 +65,7 @@ const Page = () => {
             type="text"
             placeholder="Search datasets..."
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              handleSearch(e.target.value);
-            }}
+            onChange={(e) => handleSearch(e.target.value)}
             className="w-full"
           />
           <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />

@@ -7,6 +7,7 @@ import { updateAccessRequestStatus } from "~/server/access_request_queries";
 import { toast } from "~/hooks/use-toast";
 
 const AccessRequestActions = ({ requestId }: { requestId: number }) => {
+  console.log("AccessRequestActions", requestId);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -14,7 +15,7 @@ const AccessRequestActions = ({ requestId }: { requestId: number }) => {
     startTransition(() => {
       updateAccessRequestStatus({ id: requestId, status })
         .then((data) => {
-          if (!("error" in data)) {
+          if (data.success) {
             toast({
               description: `Request ${status} successfully`,
               variant: "default",

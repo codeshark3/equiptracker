@@ -203,7 +203,7 @@ const CreateDatasetForm = () => {
             type="file"
             onChange={(e) => setFile(e.target.files?.[0] || null)}
             className="w-full"
-            accept=".pdf,.doc,.docx,.txt,.csv"
+            accept=".pdf,.doc,.docx,.txt,.csv,.xlsx,.xls"
           />
         </div>
 

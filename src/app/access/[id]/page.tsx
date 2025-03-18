@@ -5,7 +5,8 @@ import { getAccessRequestById } from "~/server/access_request_queries";
 import { Building, User, Calendar, Mail } from "lucide-react";
 import AccessRequestActions from "./AccessRequestActions";
 const page = async (props: { params: Promise<{ id: string }> }) => {
-  const { id } = await props.params;
+  const params = await props.params;
+  const { id } = params;
   const accessRequest = await getAccessRequestById(parseInt(id));
 
   if (!Array.isArray(accessRequest) || accessRequest.length === 0) {

@@ -65,10 +65,11 @@ const DatasetDetailsPage = async (props: {
           <Link href="/datasets">
             <Button variant="outline">Back to Datasets</Button>
           </Link>
+
           <RequestAccessModal
             datasetId={id}
             datasetTitle={data.title}
-            disabled={hasPendingRequest}
+            disabled={hasPendingRequest || hasAccess}
           />
           <SaveDatasetButton datasetId={data.id} disabled={hasPendingRequest} />
           {user_role === "admin" ||
@@ -137,30 +138,37 @@ const DatasetDetailsPage = async (props: {
               Related Papers
             </h2>
             <div className="space-y-2">
-              {JSON.parse(data.papers).map(
-                (paper: { title: string; url: string }, index: number) => (
-                  <div key={index} className="rounded-md bg-gray-50 p-4">
-                    <div className="flex items-start space-x-2">
-                      <FileText className="h-5 w-5 text-gray-500" />
-                      <div className="flex justify-between gap-2">
-                        <div className="w-1/2">
-                          <p className="text-gray-700">{paper.title}</p>
-                        </div>
-                        <div className="w-1/2">
-                          <a
-                            href={paper.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                          >
-                            {paper.url}
-                          </a>
+              {(() => {
+                try {
+                  const papers = JSON.parse(data.papers);
+                  return papers.map(
+                    (paper: { title: string; url: string }, index: number) => (
+                      <div key={index} className="rounded-md bg-gray-50 p-4">
+                        <div className="flex items-start space-x-2">
+                          <FileText className="h-5 w-5 text-gray-500" />
+                          <div className="flex justify-between gap-2">
+                            <div className="w-1/2">
+                              <p className="text-gray-700">{paper.title}</p>
+                            </div>
+                            <div className="w-1/2">
+                              <a
+                                href={paper.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline"
+                              >
+                                {paper.url}
+                              </a>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ),
-              )}
+                    ),
+                  );
+                } catch (e) {
+                  return null;
+                }
+              })()}
             </div>
           </div>
         )}

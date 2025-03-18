@@ -41,17 +41,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 
-interface DataTableProps<TData extends { datasetId: number | string }, TValue> {
+interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   globalFilter?: string;
   setGlobalFilter?: Dispatch<SetStateAction<string>>;
 }
 
-export function DataTable<
-  TData extends { datasetId: number | string },
-  TValue,
->({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   globalFilter,
@@ -156,9 +153,7 @@ export function DataTable<
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() =>
-                    router.push(`/datasets/${row.original.datasetId}`)
-                  }
+                  onClick={() => router.push(`/datasets/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

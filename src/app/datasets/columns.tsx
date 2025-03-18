@@ -10,8 +10,8 @@ import Link from "next/link";
 // You can use a Zod schema here if you want.
 export type Dataset = {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   title: string;
   year: string;
   pi_name: string;
@@ -23,13 +23,13 @@ export type Dataset = {
   user_id: string | null;
 };
 
-export type SavedDataset = {
-  id: number;
-  userId: string;
-  datasetId: string;
-  title: string | null;
-  status: string | null;
-};
+// export type SavedDataset = {
+//   id: number;
+//   userId: string;
+//   datasetId: string;
+//   title: string | null;
+//   status: string | null;
+// };
 
 export const columns: ColumnDef<Dataset>[] = [
   {
@@ -45,6 +45,14 @@ export const columns: ColumnDef<Dataset>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const title = row.getValue("title") as string;
+      return (
+        <div className="font-medium">
+          {title.length > 50 ? `${title.slice(0, 50)}...` : title}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "year",
@@ -55,14 +63,17 @@ export const columns: ColumnDef<Dataset>[] = [
       );
     },
   },
+
   {
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => {
+      const description = (row.getValue("description") as string) || "";
+      const lines = description.split("\n");
+      const truncatedDescription = lines.slice(0, 2).join("\n");
+
       return (
-        <div className="text-center font-medium">
-          {row.getValue("description")}
-        </div>
+        <div className="text-center font-medium">{truncatedDescription}</div>
       );
     },
   },

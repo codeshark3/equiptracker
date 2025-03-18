@@ -132,7 +132,7 @@ export async function updateAccessRequestStatus({
       .update(access_request)
       .set({ status })
       .where(eq(access_request.id, id));
-    return accessRequest;
+    return { success: "Access request updated successfully!" };
   } else {
     return {
       error: "You are not authorized to update this access request!",

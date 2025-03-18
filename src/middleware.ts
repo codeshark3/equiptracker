@@ -32,10 +32,10 @@ const adminRoutes = [
   "/datasets",
   "/datasets/delete/:id*",
   "/access",
-  "/access/[id]",
 ];
 const customerRoutes = [
   "/customer",
+  "/datasets",
   "/customer/access",
   "/customer/access/[id]",
 ];
@@ -58,6 +58,9 @@ export default async function authMiddleware(request: NextRequest) {
   const isAdminRoute = adminRoutes.includes(pathName) || isDynamicAdminRoute;
   const isCustomerRoute = customerRoutes.includes(pathName);
 
+  // Add a check for dynamic access routes
+  const isDynamicAccessRoute = /^\/access\/[^\/]+$/.test(pathName);
+
   console.log(
     "Path:",
     pathName,
@@ -65,18 +68,31 @@ export default async function authMiddleware(request: NextRequest) {
     isDynamicDatasetRoute || isDynamicSearchRoute,
     "isPublic:",
     isPublicRoute,
+    "isAdmin:",
+    isAdminRoute,
+    "isStaff:",
+    isStaffRoute,
+    "isCustomer:",
+    isCustomerRoute,
   );
+  console.log("Middleware Path:", request.nextUrl.pathname);
+  console.log("Headers:", request.headers);
 
-  // Fetch session from API
-  const { data: session } = await betterFetch<Session>(
-    "/api/auth/get-session",
-    {
+  let session: Session | null = null;
+  try {
+    const response = await betterFetch<Session>("/api/auth/get-session", {
       baseURL: process.env.BETTER_AUTH_URL,
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-      },
-    },
-  );
+      headers: { cookie: request.headers.get("cookie") || "" },
+    });
+
+    if (!response || !response.data) {
+      console.warn("Session fetch failed, response:", response);
+    }
+
+    session = response?.data || null;
+  } catch (error) {
+    console.error("Failed to fetch session:", error);
+  }
 
   // If no session (unauthenticated)
   if (!session) {
@@ -99,7 +115,7 @@ export default async function authMiddleware(request: NextRequest) {
 
   // Admin can access public and admin routes only
   if (role === "admin") {
-    if (isPublicRoute || isAdminRoute || isStaffRoute || isCustomerRoute) {
+    if (isPublicRoute || isAdminRoute || isStaffRoute || isDynamicAccessRoute) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/admin", request.url));

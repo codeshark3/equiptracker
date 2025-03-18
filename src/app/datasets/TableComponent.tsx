@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "./data-table";
 import { Dataset, columns } from "./columns";
-
+import { datasetSchema } from "~/schemas";
 import { matchSorter } from "match-sorter";
+import { z } from "zod";
 
+// Uncomment and use this interface
 interface TableComponentProps {
   initialData: Dataset[];
 }
@@ -39,8 +41,8 @@ const TableComponent = ({ initialData }: TableComponentProps) => {
   return (
     <div className="space-y-4">
       <DataTable
-        columns={columns as any} // Type assertion to temporarily fix type error
-        data={data as any} // Type assertion to temporarily fix type error
+        columns={columns}
+        data={data}
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
       />

@@ -38,20 +38,17 @@ const page = async (props: { params: Promise<{ id: string }> }) => {
   const data = dataset[0] as NonNullable<(typeof dataset)[0]>;
 
   return (
-    <div className="mx-auto w-full px-4 py-8">
-      <div className="mb-6 flex-col items-center justify-between">
-        <h1 className="text-3xl font-bold text-primary">{data.title}</h1>
-        <div className="mt-1 flex space-x-3">
-          <Link href="/searchpage">
-            <Button variant="outline">Back to Datasets</Button>
-          </Link>
-          <RedirectToAuthButton />
-        </div>
-      </div>
-
+    <div className="mx-auto w-[90%] px-4 py-8">
       <div className="rounded-lg border p-6 shadow-sm">
         {/* Metadata Grid */}
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="flex items-center space-x-2">
+            <Calendar className="h-5 w-5 text-gray-500" />
+            <span className="text-sm font-medium text-gray-500">
+              Dataset Name:
+            </span>
+            <span className="text-md text-primary">{data.title}</span>
+          </div>
           <div className="flex items-center space-x-2">
             <Calendar className="h-5 w-5 text-gray-500" />
             <span className="text-sm font-medium text-gray-500">
@@ -144,6 +141,15 @@ const page = async (props: { params: Promise<{ id: string }> }) => {
               Last updated: {new Date(data.updatedAt).toLocaleDateString()}
             </span>
           </div>
+        </div>
+      </div>
+      <div className="mb-6 flex-col items-center justify-end space-y-2">
+        {/* <h1 className="text-3xl font-bold text-primary">{data.title}</h1> */}
+        <div className="mt-1 flex space-x-3">
+          <Link href="/searchpage">
+            <Button variant="outline">Back to Datasets</Button>
+          </Link>
+          <RedirectToAuthButton />
         </div>
       </div>
     </div>
