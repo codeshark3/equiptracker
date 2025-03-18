@@ -220,7 +220,7 @@ const MENU_ITEMS: Record<string, MenuItem[]> = {
   admin: [
     { title: "Home", url: "/admin", icon: Home },
     { title: "Manage Users", url: "/admin/users", icon: User2 },
-
+    { title: "Insert Dataset", url: "/datasets/create", icon: User2 },
     { title: "Manage Datasets", url: "/datasets", icon: Calendar },
     { title: "Access Requests", url: "/access", icon: Inbox },
   ],
