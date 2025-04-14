@@ -8,7 +8,7 @@ export default {
   dbCredentials: {
     url: env.POSTGRES_URL,
   },
-  tablesFilter: ["csir_dbms_*"],
+  tablesFilter: ["equiptracker_*"],
   verbose: true,
   // introspect: {
   //   casing: "camel", // or "preserve"

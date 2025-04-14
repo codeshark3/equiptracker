@@ -64,42 +64,15 @@ export const SignUpSchema = z
 //   tagIds: z.array(z.number()).optional(),
 // });
 
-export const papersSchema = z.object({
+export const bookingSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  url: z.string().min(1, "Reference is required"),
+  name: z.string().min(1, "Name is required"),
+  date: z.date(),
+  equipment_name: z.string().min(1, "Equipment name is required"),
+  start_time: z.string().min(1, "Start time is required"),
+  end_time: z.string().min(1, "End time is required"),
+  project_name: z.string().min(1, "Project name is required"),
+  supervisor_name: z.string().min(1, "Supervisor name is required"),
 });
 
-export const datasetSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  year: z
-    .string()
-    .length(4)
-    .regex(/^\d{4}$/, "Year must be in YYYY format"),
-  pi_name: z.string().min(1, "PI name is required"),
-  description: z.string(),
-  division: z.string().min(1, "Division is required"),
-
-  papers: z.array(papersSchema).optional(),
-  tags: z.string().optional(), // Ensure IDs match DB type
-  fileUrl: z.string().optional(),
-});
-
-// TypeScript type inference
-export type DatasetInput = z.infer<typeof datasetSchema>;
-
-export const datasetInsertSchema = datasetSchema.pick({
-  title: true,
-  year: true,
-  pi_name: true,
-  division: true,
-  description: true,
-  papers: true,
-
-  tags: true, // Optional but needed for insert
-});
-
-export const accessRequestSchema = z.object({
-  reason: z.string().min(1, "Reason is required"),
-});
-
-export type AccessRequestInput = z.infer<typeof accessRequestSchema>;
+export type BookingInput = z.infer<typeof bookingSchema>;

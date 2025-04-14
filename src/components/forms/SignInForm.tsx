@@ -37,7 +37,7 @@ const SignInForm = () => {
       email,
 
       password,
-      // callbackURL: "/",
+      callbackURL: "/",
       fetchOptions: {
         onRequest: () => {
           toast({
@@ -55,7 +55,7 @@ const SignInForm = () => {
             className: "bg-emerald-500 text-white font-bold ",
           });
           form.reset();
-          router.push("/customer");
+          router.push("/");
           // if (val.data?.user?.role === "admin") {
           //   router.push("/admin");
           // }
@@ -94,7 +94,7 @@ const SignInForm = () => {
             height={100}
             className="pb-4"
           />
-          <h1 className="text-bold text-xl">CSIR Database Management System</h1>
+          <h1 className="text-bold text-xl">BPHRU Equipment Booking System</h1>
         </div>
 
         <CardTitle>Sign In</CardTitle>
@@ -111,8 +111,8 @@ const SignInForm = () => {
               name="email"
               label="Email"
               placeholder="user@email.com"
-            // iconSrc="/assets/icons/email.svg"
-            // iconAlt="email"
+              // iconSrc="/assets/icons/email.svg"
+              // iconAlt="email"
             />
             <CustomFormField
               control={form.control}
@@ -120,8 +120,8 @@ const SignInForm = () => {
               name="password"
               label="Password"
               placeholder="*******"
-            // iconSrc="/assets/icons/email.svg"
-            // iconAlt="email"
+              // iconSrc="/assets/icons/email.svg"
+              // iconAlt="email"
             />
             <Button type="submit" className="w-full bg-primary">
               Sign In

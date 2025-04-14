@@ -21,7 +21,7 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `csir_dbms_${name}`);
+export const createTable = pgTableCreator((name) => `equiptracker_${name}`);
 
 export const user = createTable("user", {
   id: text("id").primaryKey(),
@@ -74,76 +74,20 @@ export const verification = createTable("verification", {
   expiresAt: timestamp("expiresAt").notNull(),
 });
 
-export const dataset = createTable("dataset", {
+export const booking = createTable("booking", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
-  year: text("year").notNull(),
-  pi_name: text("pi_name").notNull(),
-  tags: text("tags"),
-  papers: text("papers"),
-  division: text("division").notNull(),
-  description: text("description").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  fileUrl: text("fileUrl"),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .$onUpdate(() => new Date()),
-  user_id: text("user_id").references(() => user.id),
-});
-
-// Tags Table (Stores unique tag names)
-export const tags = createTable("tags", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-});
-
-// Junction Table (Many-to-Many Relationship)
-export const datasetTags = createTable("dataset_tags", {
-  datasetId: text("dataset_id")
-    .notNull()
-    .references(() => dataset.id),
-  tagId: integer("tag_id")
-    .notNull()
-    .references(() => tags.id),
-});
-
-export const access_request = createTable("access_request", {
-  id: serial("id").primaryKey(),
-  datasetId: text("dataset_id")
-    .notNull()
-    .references(() => dataset.id),
-  reason: text("reason").notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id),
-  status: text("status").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
+  name: text("name").notNull(),
+  date: text("date").notNull(),
+  equipment_name: text("equipment_name").notNull(),
+  start_time: text("start_time").notNull(),
+  end_time: text("end_time").notNull(),
+  project_name: text("project_name").notNull(),
+  supervisor_name: text("supervisor_name").notNull(),
+  approved_by: text("approved_by"),
+  status: text("status").default("pending").notNull(),
+  created_at: timestamp("created_at").notNull().defaultNow(),
+  updated_at: timestamp("updated_at")
     .notNull()
     .$onUpdate(() => new Date()),
 });
-
-export const saved_dataset = createTable("saved_dataset", {
-  id: serial("id").primaryKey(),
-  datasetId: text("dataset_id")
-    .notNull()
-    .references(() => dataset.id),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .$onUpdate(() => new Date()),
-});
-
-// export const papers = createTable("papers", {
-//   id: serial("id").primaryKey(),
-//   datasetId: text("dataset_id")
-//     .notNull()
-//     .references(() => dataset.id),
-//   title: text("title").notNull(),
-//   url: text("url").notNull(),
-//   createdAt: timestamp("created_at").notNull().defaultNow(),
-//   userId: text("user_id").references(() => user.id),
-// });

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -18,13 +19,17 @@ import { Textarea } from "~/components/ui/textarea";
 import { Input } from "~/components/ui/input";
 import { Control } from "react-hook-form";
 import { Checkbox } from "~/components/ui/checkbox";
+import { DatePicker } from "~/components/ui/date-picker";
+import { Button } from "~/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { Calendar } from "~/components/ui/calendar";
 
-// import "react-phone-number-input/style.css";
-// import PhoneInput from "react-phone-number-input";
-// import { E164Number } from "libphonenumber-js/core";
-// import ReactDatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-
+import { cn } from "~/lib/utils";
+import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
 export enum FormFieldType {
   INPUT = "input",
@@ -156,28 +161,39 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
       //     </FormControl>
       //   );
       break;
-    // case FormFieldType.DATE_PICKER:
-    //   return (
-    //     <div className="flex rounded-md border border-dark-500 bg-dark-400">
-    //       <Image
-    //         src="/assets/icons/calendar.svg"
-    //         height={24}
-    //         width={24}
-    //         alt="user"
-    //         className="ml-2"
-    //       />
-    //       <FormControl>
-    //         <ReactDatePicker
-    //           showTimeSelect={props.showTimeSelect ?? false}
-    //           selected={field.value}
-    //           onChange={(date) => field.onChange(date)}
-    //           timeInputLabel="Time:"
-    //           dateFormat={props.dateFormat ?? "MM/dd/yyyy"}
-    //           wrapperClassName="date-picker"
-    //         />
-    //       </FormControl>
-    //     </div>
-    //   );
+    case FormFieldType.DATE_PICKER:
+      return (
+        <Popover>
+          <PopoverTrigger asChild>
+            <FormControl>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] pl-3 text-left font-normal",
+                  !field.value && "text-muted-foreground",
+                )}
+              >
+                {field.value ? (
+                  field.value.toLocaleDateString()
+                ) : (
+                  <span>Pick a date</span>
+                )}
+                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+              </Button>
+            </FormControl>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={field.value}
+              onSelect={(date: Date | undefined) => {
+                field.onChange(date);
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      );
     case FormFieldType.SKELETON:
       return props.renderSkeleton ? props.renderSkeleton(field) : null;
     default:

@@ -2,9 +2,9 @@
 "use server";
 import { db } from "./db";
 // import { auth } from "@clerk/nextjs/server";
-import { dataset, user } from "./db/schema";
-import { and, eq } from "drizzle-orm";
-import { SignInSchema, datasetSchema } from "~/schemas/index";
+import { user } from "./db/schema";
+import { eq } from "drizzle-orm";
+import { SignInSchema } from "~/schemas/index";
 import type * as z from "zod";
 import { headers } from "next/headers";
 // import { validateRequest } from "~/auth";

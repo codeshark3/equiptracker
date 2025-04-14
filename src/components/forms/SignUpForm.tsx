@@ -19,7 +19,7 @@ import { FormFieldType } from "../CustomFormField";
 import { Button } from "../ui/button";
 import { authClient } from "~/lib/auth-client";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 const SignUpForm = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof SignUpSchema>>({
@@ -38,7 +38,7 @@ const SignUpForm = () => {
       email,
       name,
       password,
-      callbackURL: "/sign-in ",
+      callbackURL: "/sign-in",
       fetchOptions: {
         onRequest: () => {
           toast({
@@ -75,6 +75,16 @@ const SignUpForm = () => {
   return (
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
+        <div className="flex flex-col items-center justify-center pb-4">
+          <Image
+            src="/assets/images/logo.png"
+            alt="Logo"
+            width={100}
+            height={100}
+            className="pb-4"
+          />
+          <h1 className="text-bold text-xl">BPHRU Equipment Booking System</h1>
+        </div>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Create your account to get started.</CardDescription>
       </CardHeader>
