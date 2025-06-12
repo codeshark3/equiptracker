@@ -43,10 +43,10 @@ const Header = () => {
 
           {user ? (
             <div className="flex items-center gap-2">
-              <Link href="/" className={buttonVariants()}>
+              {/* <Link href="/" className={buttonVariants()}>
                 {" "}
                 Dashboard
-              </Link>
+              </Link> */}
               {/* <form
                 action={async () => {
                   "use server";
@@ -67,9 +67,9 @@ const Header = () => {
               <Link href="/sign-in" className={buttonVariants()}>
                 <h1>Login</h1>
               </Link>
-              <Link href="/sign-up" className={buttonVariants()}>
+              {/* <Link href="/sign-up" className={buttonVariants()}>
                 <h1>Register</h1>
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>

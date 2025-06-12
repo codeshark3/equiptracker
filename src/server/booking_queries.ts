@@ -87,3 +87,58 @@ export async function getBookingById(id: string) {
   const book = await db.select().from(booking).where(eq(booking.id, id));
   return book;
 }
+
+export async function updateBooking({
+  id,
+  values,
+}: {
+  id: string;
+  values: z.infer<typeof bookingSchema>;
+}) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user_role = session?.user.role;
+  if (user_role === "admin" || user_role === "staff") {
+    const validatedFields = bookingSchema.safeParse(values);
+    if (!validatedFields.success) {
+      return { error: "Invalid Fields!" };
+    }
+
+    const {
+      name,
+      title,
+      date,
+      equipment_name,
+      start_time,
+      end_time,
+      project_name,
+      supervisor_name,
+    } = validatedFields.data;
+
+    try {
+      await db
+        .update(booking)
+        .set({
+          name,
+          title,
+          date: date.toISOString(),
+          equipment_name,
+          start_time,
+          end_time,
+          project_name,
+          supervisor_name,
+        })
+        .where(eq(booking.id, id));
+      revalidatePath("/");
+      return { success: true, message: "Booking updated successfully!" };
+    } catch (error: any) {
+      return { error: error?.message };
+    }
+  } else {
+    return {
+      error: "You are not authorized to update this booking!",
+    };
+  }
+}
